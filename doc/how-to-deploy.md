@@ -61,7 +61,7 @@ After a few seconds, you should now be in your version of the AzUrlShortener pro
 
 1. Get the application URL
 
-After the deployment is complete, you will see the URLs of your applications in the terminal; the one starting by `https://admin` is the admin tools (aka TinyBlazorAdmin), and the one starting with `https://azfunc-light` is the redicrect service. There is also many details about the resources created in Azure, and a link to the .NET Aspire dashboard.
+After the deployment is complete, you will see the URLs of your applications in the terminal; the one starting by `https://admin` is the admin tools (aka TinyBlazorAdmin), and the one starting with `https://azfunc-light` is the redicrect service. There is also many details about the resources created in Azure, and a link to the Aspire dashboard.
 
 ![azd deployment result](../images/deployment-result.png)
 

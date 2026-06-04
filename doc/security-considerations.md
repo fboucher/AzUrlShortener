@@ -15,6 +15,6 @@ For more details about the built-in authentication feature of ACA, see [Authenti
 
 Using Azure Container Apps (ACA), the API container will only be accessible from the TinyBlazorAdmin and won't be exposed to the Internet. As a bonus, since TinyBlazorAdmin and the API are now running inside containers, you could also decide to run them locally.
 
-The storage access got also a security upgrade. Instead of using a connection string, I will be using a Managed Identity to access the Azure Storage Table. This is a much more secure way to access Azure resources, and thanks to .NET Aspire, it is also very easy to implement.
+The storage access got also a security upgrade. Instead of using a connection string, I will be using a Managed Identity to access the Azure Storage Table. This is a much more secure way to access Azure resources, and thanks to Aspire, it is also very easy to implement.
 
 For more details about Security read the [SECURITY.md](../SECURITY.md) file.

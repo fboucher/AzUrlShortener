@@ -21,12 +21,12 @@ jobs:
     - name: Set up .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.x' # Adjust the version as needed
+        dotnet-version: '10.0.x' # Adjust the version as needed
 
     - name: Clean up previous builds
       run: dotnet clean src/AzUrlShortener.sln
 
-    - name: Install .NET Aspire workload
+    - name: Install Aspire workload
       run: dotnet workload update && dotnet workload install aspire
 
     - name: Restore dependencies
