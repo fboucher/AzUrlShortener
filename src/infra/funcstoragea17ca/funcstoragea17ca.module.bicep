@@ -72,6 +72,8 @@ resource funcstoragea17ca_StorageAccountContributor 'Microsoft.Authorization/rol
 
 output blobEndpoint string = funcstoragea17ca.properties.primaryEndpoints.blob
 
+output dataLakeEndpoint string = funcstoragea17ca.properties.primaryEndpoints.dfs
+
 output queueEndpoint string = funcstoragea17ca.properties.primaryEndpoints.queue
 
 output tableEndpoint string = funcstoragea17ca.properties.primaryEndpoints.table
