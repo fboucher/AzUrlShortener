@@ -28,6 +28,32 @@ Features:
 
 If you want to **Update** or **Upgrade**, please refer to [the faq page](doc/faq.md). 
 
+## Scripts
+
+Useful setup and validation scripts are available in [src/tools](src/tools).
+
+Script documentation index: [src/tools/README.md](src/tools/README.md).
+
+### Bootstrap admin auth setup
+
+Run this script to wire TinyBlazorAdmin managed identity, federated credential, optional claims, and API role assignment:
+
+pwsh ./src/tools/setup-admin-auth.ps1 -ResourceGroupName <RESOURCE_GROUP_NAME> -ManagedIdentityName <MANAGED_IDENTITY_NAME> -AdminAppDisplayName <ADMIN_APP_DISPLAY_NAME> -ApiAppDisplayName <API_APP_DISPLAY_NAME>
+
+Preview changes only:
+
+pwsh ./src/tools/setup-admin-auth.ps1 -ResourceGroupName <RESOURCE_GROUP_NAME> -ManagedIdentityName <MANAGED_IDENTITY_NAME> -AdminAppDisplayName <ADMIN_APP_DISPLAY_NAME> -ApiAppDisplayName <API_APP_DISPLAY_NAME> -WhatIf
+
+The script prints a ready-to-copy configuration block for [src/tools/validate-setup.ps1](src/tools/validate-setup.ps1).
+
+### Validate setup
+
+After setup, run:
+
+pwsh ./src/tools/validate-setup.ps1
+
+This validates app registrations, managed identity wiring, federated credential, role assignments, and admin container app environment configuration.
+
 ## How To Use It
 
 Once deployed, use the admin webApp (aka TinyBlazorAdmin) to create new short URLs. 

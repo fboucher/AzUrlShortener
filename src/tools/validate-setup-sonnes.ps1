@@ -27,71 +27,42 @@ $ErrorActionPreference = "Stop"
 # =====================
 # CONFIGURATION
 # =====================
-# Fill all values below before running.
-# Tip: Keep this file as a template and copy it to validate-setup.local.ps1 for personal values.
-#
-# Quick lookup commands:
-# - Current tenant id:
-#   az account show --query tenantId -o tsv
-# - App registration client id by display name:
-#   az ad app list --display-name "<APP_DISPLAY_NAME>" --query "[0].appId" -o tsv
-# - Service principal object id by app id:
-#   az ad sp list --filter "appId eq '<APP_OR_MI_CLIENT_ID>'" --query "[0].id" -o tsv
-# - User-assigned managed identity details:
-#   az identity show -g <RESOURCE_GROUP_NAME> -n <MANAGED_IDENTITY_NAME> --query "{clientId:clientId,principalId:principalId,id:id}" -o json
 
 # Tenant
-# Entra tenant id (GUID)
-$TenantId = "<TENANT_ID>"
+$TenantId = "0415ab43-74be-4805-b47c-4b40639385e4"
 
 # Azure resources
-# Resource group where admin/api Container Apps are deployed
-$ResourceGroupName = "<RESOURCE_GROUP_NAME>"
-# Container App name for TinyBlazorAdmin
-$AdminContainerAppName = "<ADMIN_CONTAINER_APP_NAME>"
-# Container App name for API
-$ApiContainerAppName = "<API_CONTAINER_APP_NAME>"
+$ResourceGroupName = "rg-myAzUrlShortener"
+$AdminContainerAppName = "admin"
+$ApiContainerAppName = "api"
 
 # Admin app registration
-# Client ID (appId) from Entra App registrations -> admin app
-$AdminAppClientId = "<ADMIN_APP_CLIENT_ID>"
-# Display name of the same app registration (used as a sanity check)
-$AdminAppDisplayName = "<ADMIN_APP_DISPLAY_NAME>"
+$AdminAppClientId = "baa110be-386e-4f21-8211-aa110ce33556"
+$AdminAppDisplayName = "adminAzUrlShortener"
 
 # API app registration
-# Client ID (appId) from Entra App registrations -> API app
-$ApiAppClientId = "<API_APP_CLIENT_ID>"
-# Display name of the same API app registration
-$ApiAppDisplayName = "<API_APP_DISPLAY_NAME>"
+$ApiAppClientId = "4006b5fa-9b2f-4b52-9660-55e6b5470365"
+$ApiAppDisplayName = "AzUrlShortener-Api"
 
 # Managed identity attached to admin container app (user-assigned)
-# IMPORTANT:
-# - ManagedIdentityClientId = managed identity application/client id (appId)
-# - ManagedIdentityPrincipalId = managed identity object/principal id (service principal object id)
-# These are different values.
-$ManagedIdentityClientId = "<MANAGED_IDENTITY_CLIENT_ID>"
-$ManagedIdentityPrincipalId = "<MANAGED_IDENTITY_PRINCIPAL_ID>"
-# Full Azure resource id of the user-assigned managed identity
-$ManagedIdentityResourceId = "<MANAGED_IDENTITY_RESOURCE_ID>"
+$ManagedIdentityClientId = "694a7721-feac-419d-bb4c-20b6eee9adbe"
+$ManagedIdentityPrincipalId = "d12fd4e7-e944-48e4-a324-26796497e00d"
+$ManagedIdentityResourceId = "/subscriptions/29164e27-5930-4caa-9ea7-0d4774e963de/resourcegroups/rg-myAzUrlShortener/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mi-fdkpaja47irka"
 
 # Optional: set when you explicitly want to validate the container app's identity.principalId
 # Leave empty to skip because this may represent a system-assigned identity when both identity types are enabled.
 $ExpectedAdminContainerPrincipalId = ""
 
 # Federated identity credential expectations (Admin app)
-# Federated credential name configured on the admin app registration
-$ExpectedFederatedCredentialName = "<FEDERATED_CREDENTIAL_NAME>"
-# For Azure Global cloud this is usually api://AzureADTokenExchange
+$ExpectedFederatedCredentialName = "adminAzUrlShortener-MI"
 $ExpectedFederatedAudience = "api://AzureADTokenExchange"
 
 # Required API app role values
-# These are the appRole "value" fields on the API app registration.
 $RequiredApiRoleValues = @("UrlCreator", "UrlManager", "Admin")
 
 # Required role assignment(s) for the managed identity on the API enterprise app
 # Example: @("Admin") or @("UrlCreator") or @("Admin", "UrlManager")
-# Use API app role values (not role display names, not role ids).
-$RequiredManagedIdentityToApiRoleAssignments = @("<API_APP_ROLE_VALUE>")
+$RequiredManagedIdentityToApiRoleAssignments = @("Admin")
 
 # =====================
 # IMPLEMENTATION
