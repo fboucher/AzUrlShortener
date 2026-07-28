@@ -1,22 +1,32 @@
 # Frequently asked questions (f.a.q.)
 
-- [How to Add a Custom Domain](./how-to-add-custom-domain.md)
-- [Add authentication to the admin website](./how-to-deploy.md#add-authentication-to-the-admin-website)
-- [Add a custom domain to the admin website](./how-to-add-custom-domain.md#add-a-custom-domain-to-the-admin-website)
-- [How to migrate your data](./how-to-migrate-data.md)
-- [How to deploy your AzUrlShortener](./how-to-deploy.md)
+## Quick links
+
+### Getting started and operations
+
 - [How to run AzUrlShortener locally](#how-to-run-azurlshortener-locally)
-- [How to update/ redeploy AzUrlShortener](#update-redeploy-azurlshortener)
-- [How does it work?](./how-it-works.md)
-- [Security Considerations](./security-considerations.md)
-- [How to make the api public](./how-to-set-api-public.md)
+- [How to deploy your AzUrlShortener](./how-to-deploy.md)
+- [How to update/redeploy AzUrlShortener](#update-redeploy-azurlshortener)
+- [How to migrate your data](./how-to-migrate-data.md)
+- [How to validate setup configuration](#how-to-validate-setup-configuration)
+
+### Configuration
+
+- [How to add a custom domain](./how-to-add-custom-domain.md)
+- [Add a custom domain to the admin website](./how-to-add-custom-domain.md#add-a-custom-domain-to-the-admin-website)
+- [Add authentication to the admin website](./how-to-deploy.md#add-authentication-to-the-admin-website)
+- [How to make the API public](./how-to-set-api-public.md)
 - [How to configure admin auth with managed identity and app roles](#how-to-configure-admin-auth-with-managed-identity-and-app-roles)
-- [How to validate setup configuration](../src/tools/validate-setup.ps1)
+
+### Reference
+
+- [How does it work?](./how-it-works.md)
+- [Security considerations](./security-considerations.md)
 
 
 ## How to run AzUrlShortener locally
 
-You will need .NET 10, Docker or Podman installed on your machine. From the `scr` directory, run the following command `dotnet run --project AppHost`. You can also open the solution in Visual Studio or Visual studio Code and use F5, make sure the `Cloud5mins.ShortenerTools.AppHost` project is set as starting project.
+You will need .NET 10, Docker or Podman installed on your machine. From the `src` directory, run the following command `dotnet run --project AppHost`. You can also open the solution in Visual Studio or Visual Studio Code and use F5, make sure the `Cloud5mins.ShortenerTools.AppHost` project is set as starting project.
 
 
 ## Update/ redeploy AzUrlShortener
