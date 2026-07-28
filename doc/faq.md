@@ -150,12 +150,43 @@ azd up
 
 Then sign out and sign in again (new token issuance).
 
-### 7) Verification checklist
+### 7) Authorize admin managed identity to call API
+
+TinyBlazorAdmin calls the API using its managed identity. User roles in the UI are not enough for downstream app-to-app API authorization.
+
+Assign an API app role (for example `Admin`) to the admin managed identity service principal:
+
+```powershell
+$apiAppId = "<API_APP_CLIENT_ID>"
+$miSpId = "<ADMIN_MANAGED_IDENTITY_SERVICE_PRINCIPAL_ID>"
+
+$apiSpId = az ad sp list --filter "appId eq '$apiAppId'" --query "[0].id" -o tsv
+$apiAppObjectId = az ad app list --filter "appId eq '$apiAppId'" --query "[0].id" -o tsv
+$apiAdminRoleId = az ad app show --id $apiAppObjectId --query "appRoles[?value=='Admin'] | [0].id" -o tsv
+
+$assignment = @{
+	principalId = $miSpId
+	resourceId = $apiSpId
+	appRoleId = $apiAdminRoleId
+} | ConvertTo-Json -Depth 5
+
+$assignmentFile = Join-Path $env:TEMP "mi-api-approle-assignment.json"
+Set-Content -Path $assignmentFile -Value $assignment -Encoding UTF8
+
+az rest --method POST --url "https://graph.microsoft.com/v1.0/servicePrincipals/$miSpId/appRoleAssignments" --headers "Content-Type=application/json" --body "@$assignmentFile"
+
+az rest --method GET --url "https://graph.microsoft.com/v1.0/servicePrincipals/$miSpId/appRoleAssignments?`$filter=resourceId eq $apiSpId" --query "value[].{appRoleId:appRoleId,resourceId:resourceId}" -o table
+```
+
+The final command should return at least one assignment row for the API resource.
+
+### 8) Verification checklist
 
 1. App revision updated.
 1. Sign-in callback returns 302 to /.
 1. Home page returns 200.
 1. App log shows token validation with roles.
+1. API calls from Url Manager return 200 (not 401).
 
 ```powershell
 az containerapp logs show -g rg-<your-env-name> -n admin --tail 200
@@ -164,6 +195,14 @@ az containerapp logs show -g rg-<your-env-name> -n admin --tail 200
 Look for a line like:
 
 Token validated for <user>. roles=Admin. mappedRoles=Admin.
+
+Also verify API logs while loading Url Manager:
+
+```powershell
+az containerapp logs show -g rg-<your-env-name> -n api --tail 200
+```
+
+If API still returns 401, check that the managed identity app-role assignment in step 7 exists and that the API token audience matches API client id (either `<clientId>` or `api://<clientId>`).
 
 ### Common errors
 
@@ -178,3 +217,12 @@ Token validated for <user>. roles=Admin. mappedRoles=Admin.
 - Login succeeds but menu items are missing.
 	- User is authenticated but has no role claims.
 	- Verify app role assignment in Enterprise applications and token optional claims for roles.
+
+- Login/menu works, but Url Manager actions return 401.
+	- The admin managed identity is not authorized on the API app registration.
+	- Assign API app role(s) to the admin managed identity service principal as described in step 7.
+
+- Login/menu works, API logs show token audience is valid, but calls still return 401.
+	- TinyBlazorAdmin may be acquiring downstream tokens from a different identity than the configured user-assigned identity.
+	- Verify `AZURE_CLIENT_ID` and `AzureAd__ClientCredentials__0__ManagedIdentityClientId` in the admin container app.
+	- Ensure the downstream token handler uses `ManagedIdentityCredential` with that user-assigned client ID.

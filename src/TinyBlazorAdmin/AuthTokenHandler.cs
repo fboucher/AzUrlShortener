@@ -11,8 +11,14 @@ namespace Cloud5mins.ShortenerTools.TinyBlazorAdmin;
 /// </summary>
 public class AuthTokenHandler(IConfiguration configuration) : DelegatingHandler
 {
-    // Reuse the credential across requests — DefaultAzureCredential is thread-safe and caches tokens internally
-    private static readonly DefaultAzureCredential _credential = new();
+    // Use the configured user-assigned managed identity in Azure; fall back to local default credentials for dev.
+    private readonly TokenCredential _credential =
+        !string.IsNullOrWhiteSpace(configuration["AzureAd:ClientCredentials:0:ManagedIdentityClientId"]
+            ?? configuration["AZURE_CLIENT_ID"])
+            ? new ManagedIdentityCredential(ManagedIdentityId.FromUserAssignedClientId(
+                configuration["AzureAd:ClientCredentials:0:ManagedIdentityClientId"]
+                ?? configuration["AZURE_CLIENT_ID"]!))
+            : new DefaultAzureCredential();
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

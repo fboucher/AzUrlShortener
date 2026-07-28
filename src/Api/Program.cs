@@ -1,4 +1,5 @@
 using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,20 @@ builder.Services.AddTransient<ILogger>(sp =>
 
 // Add Microsoft Entra ID JWT Bearer authentication
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration);
+builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    var apiClientId = builder.Configuration["AzureAd:ClientId"];
+    if (!string.IsNullOrWhiteSpace(apiClientId))
+    {
+        // Managed identity app tokens can use either audience format depending on issuer settings.
+        options.TokenValidationParameters.ValidAudiences =
+        [
+            apiClientId,
+            $"api://{apiClientId}"
+        ];
+    }
+});
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("UrlCreatorOrAbove", policy =>
