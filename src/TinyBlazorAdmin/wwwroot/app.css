@@ -29,6 +29,45 @@ body {
     align-self: stretch !important;
 }
 
+.app-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+}
+
+.app-header-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap !important;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+}
+
+.app-header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.app-header-auth {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.app-header-user {
+    max-width: 20rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .manage {
     width: 100dvw;
 }
@@ -140,6 +179,14 @@ code {
 }
 
 @media (max-width: 600px) {
+    .app-header {
+        gap: 0.5rem !important;
+    }
+
+    .app-header-user {
+        display: none;
+    }
+
     .main {
         flex-direction: column !important;
         row-gap: 0 !important;
