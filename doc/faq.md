@@ -16,6 +16,7 @@
 - [Add a custom domain to the admin website](./how-to-add-custom-domain.md#add-a-custom-domain-to-the-admin-website)
 - [Add authentication to the admin website](./how-to-deploy.md#add-authentication-to-the-admin-website)
 - [How to make the API public](./how-to-set-api-public.md)
+- [Bootstrap admin auth setup with PowerShell](#bootstrap-admin-auth-setup-with-powershell)
 - [How to configure admin auth with managed identity and app roles](#how-to-configure-admin-auth-with-managed-identity-and-app-roles)
 
 ### Reference
@@ -47,6 +48,40 @@ If you haven't already, log in to your Azure account with azd auth login. You ca
 
 ```bash
 azd up
+```
+
+
+## Bootstrap admin auth setup with PowerShell
+
+To automate most of the managed identity and app registration wiring for TinyBlazorAdmin, use the setup helper script:
+
+```powershell
+cd src
+pwsh ./tools/setup-admin-auth.ps1 -ResourceGroupName <RESOURCE_GROUP_NAME> -ManagedIdentityName <MANAGED_IDENTITY_NAME> -AdminAppDisplayName <ADMIN_APP_DISPLAY_NAME> -ApiAppDisplayName <API_APP_DISPLAY_NAME>
+```
+
+Preview changes only (no writes):
+
+```powershell
+cd src
+pwsh ./tools/setup-admin-auth.ps1 -ResourceGroupName <RESOURCE_GROUP_NAME> -ManagedIdentityName <MANAGED_IDENTITY_NAME> -AdminAppDisplayName <ADMIN_APP_DISPLAY_NAME> -ApiAppDisplayName <API_APP_DISPLAY_NAME> -WhatIf
+```
+
+What it does:
+
+- Resolves app IDs and object IDs for admin app, API app, and managed identity
+- Attaches the user-assigned managed identity to the admin container app
+- Sets admin container environment variables for managed identity usage
+- Creates or updates the federated credential on the admin app registration
+- Ensures optional claims include `roles` in ID and access tokens
+- Assigns API app role (default `Admin`) to the admin managed identity
+- Prints a ready-to-copy configuration block for `tools/validate-setup.ps1`
+
+After it completes, run:
+
+```powershell
+cd src
+pwsh ./tools/validate-setup.ps1
 ```
 
 
