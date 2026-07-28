@@ -11,6 +11,7 @@
 - [Security Considerations](./security-considerations.md)
 - [How to make the api public](./how-to-set-api-public.md)
 - [How to configure admin auth with managed identity and app roles](#how-to-configure-admin-auth-with-managed-identity-and-app-roles)
+- [How to validate setup configuration](../src/tools/validate-setup.ps1)
 
 
 ## How to run AzUrlShortener locally
@@ -204,6 +205,13 @@ az containerapp logs show -g rg-<your-env-name> -n api --tail 200
 
 If API still returns 401, check that the managed identity app-role assignment in step 7 exists and that the API token audience matches API client id (either `<clientId>` or `api://<clientId>`).
 
+You can also run the setup validator script after deployment:
+
+```powershell
+cd src
+pwsh ./tools/validate-setup.ps1
+```
+
 ### Common errors
 
 - AADSTS7000218: client assertion or secret is missing.
@@ -226,3 +234,24 @@ If API still returns 401, check that the managed identity app-role assignment in
 	- TinyBlazorAdmin may be acquiring downstream tokens from a different identity than the configured user-assigned identity.
 	- Verify `AZURE_CLIENT_ID` and `AzureAd__ClientCredentials__0__ManagedIdentityClientId` in the admin container app.
 	- Ensure the downstream token handler uses `ManagedIdentityCredential` with that user-assigned client ID.
+
+- Browser shows "An unhandled error has occurred" and network shows `/_blazor?...` returns `404 No Connection with that ID`.
+	- This is usually a Blazor Server circuit affinity issue: negotiate happens on one replica, then follow-up request lands on another replica.
+	- Ensure ingress sticky sessions are enabled on the admin container app.
+
+```powershell
+az resource update --resource-group rg-<your-env-name> --name admin --resource-type Microsoft.App/containerApps --set properties.configuration.ingress.stickySessions.affinity=sticky
+```
+
+	- Verify sticky affinity and replica count:
+
+```powershell
+az containerapp show -g rg-<your-env-name> -n admin --query "{sticky:properties.configuration.ingress.stickySessions.affinity,maxReplicas:properties.template.scale.maxReplicas}" -o json
+az containerapp replica list -g rg-<your-env-name> -n admin -o table
+```
+
+	- If a previous failed command accidentally created an env var named `properties.configuration.ingress.stickySessions.affinity`, remove it:
+
+```powershell
+az containerapp update -g rg-<your-env-name> -n admin --remove-env-vars properties.configuration.ingress.stickySessions.affinity
+```
