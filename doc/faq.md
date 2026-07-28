@@ -10,6 +10,7 @@
 - [How does it work?](./how-it-works.md)
 - [Security Considerations](./security-considerations.md)
 - [How to make the api public](./how-to-set-api-public.md)
+- [How to configure admin auth with managed identity and app roles](#how-to-configure-admin-auth-with-managed-identity-and-app-roles)
 
 
 ## How to run AzUrlShortener locally
@@ -36,3 +37,144 @@ If you haven't already, log in to your Azure account with azd auth login. You ca
 ```bash
 azd up
 ```
+
+
+## How to configure admin auth with managed identity and app roles
+
+This section documents the production setup used by TinyBlazorAdmin with Microsoft Entra ID, workload identity federation, and app roles.
+
+### Prerequisites
+
+1. Admin container app is deployed and has a user-assigned managed identity attached.
+1. You know these values:
+	 - Tenant ID
+	 - Admin app registration Client ID
+	 - Admin managed identity Client ID
+	 - Admin managed identity Principal ID (Object ID)
+1. You are signed in with an account that can manage app registrations and enterprise applications.
+
+### 1) Create app roles on the app registration
+
+In Microsoft Entra admin center:
+
+1. Go to App registrations.
+1. Open the admin app registration.
+1. Open App roles.
+1. Create roles with these exact values:
+	 - UrlCreator
+	 - UrlManager
+	 - Admin
+
+The role values must match what TinyBlazorAdmin checks in code.
+
+### 2) Create federated credential that trusts the managed identity
+
+Use Azure CLI with the app registration object ID.
+
+```powershell
+$appClientId = "<ADMIN_APP_CLIENT_ID>"
+$tenantId = "<TENANT_ID>"
+$miPrincipalId = "<MANAGED_IDENTITY_PRINCIPAL_ID>"
+
+$appObjectId = az ad app list --filter "appId eq '$appClientId'" --query "[0].id" -o tsv
+
+$fic = @{
+	name = "adminAzUrlShortener-MI"
+	issuer = "https://login.microsoftonline.com/$tenantId/v2.0"
+	subject = $miPrincipalId
+	description = "Trust admin UAMI for OIDC code redemption assertion"
+	audiences = @("api://AzureADTokenExchange")
+} | ConvertTo-Json -Depth 5
+
+$path = Join-Path $env:TEMP "fic-admin-mi.json"
+$fic | Set-Content -Path $path -Encoding UTF8
+az ad app federated-credential create --id $appObjectId --parameters @$path
+```
+
+Important:
+
+- subject must be the managed identity Principal ID (Object ID), not the client ID.
+- issuer must match the tenant in v2.0 format.
+- audience for global Azure must be api://AzureADTokenExchange.
+
+### 3) Configure token optional claims for roles
+
+```powershell
+$appObjectId = "<APP_OBJECT_ID>"
+$payload = @{
+	optionalClaims = @{
+		idToken = @(@{ name = "roles"; essential = $false; additionalProperties = @() })
+		accessToken = @(@{ name = "roles"; essential = $false; additionalProperties = @() })
+	}
+} | ConvertTo-Json -Depth 10
+
+$file = Join-Path $env:TEMP "admin-optional-claims.json"
+Set-Content -Path $file -Value $payload -Encoding UTF8
+
+az rest --method PATCH --url "https://graph.microsoft.com/v1.0/applications/$appObjectId" --headers "Content-Type=application/json" --body "@$file"
+az ad app show --id $appObjectId --query optionalClaims -o json
+```
+
+### 4) Assign users (or groups) to app roles
+
+In Enterprise applications:
+
+1. Open the service principal for the admin app.
+1. Go to Users and groups.
+1. Assign your user (or a group) to one of:
+	 - UrlCreator
+	 - UrlManager
+	 - Admin
+
+### 5) Ensure the container app passes managed identity settings
+
+Admin container app must include:
+
+- AZURE_CLIENT_ID = user-assigned managed identity client ID
+- AzureAd__ClientCredentials__0__ManagedIdentityClientId = user-assigned managed identity client ID
+
+Verify with:
+
+```powershell
+$rg='rg-<your-env-name>'
+$app='admin'
+az containerapp show -g $rg -n $app --query "properties.template.containers[0].env[?name=='AzureAd__ClientCredentials__0__ManagedIdentityClientId' || name=='AZURE_CLIENT_ID']" -o table
+```
+
+### 6) Redeploy and reauthenticate
+
+```bash
+cd src
+azd up
+```
+
+Then sign out and sign in again (new token issuance).
+
+### 7) Verification checklist
+
+1. App revision updated.
+1. Sign-in callback returns 302 to /.
+1. Home page returns 200.
+1. App log shows token validation with roles.
+
+```powershell
+az containerapp logs show -g rg-<your-env-name> -n admin --tail 200
+```
+
+Look for a line like:
+
+Token validated for <user>. roles=Admin. mappedRoles=Admin.
+
+### Common errors
+
+- AADSTS7000218: client assertion or secret is missing.
+	- Usually means the app did not send client assertion during code redemption.
+	- Verify app configuration uses ClientCredentials with SourceType SignedAssertionFromManagedIdentity.
+
+- AADSTS700213: no matching federated identity record.
+	- subject/issuer/audience mismatch in federated credential.
+	- Recheck that subject equals managed identity Principal ID exactly.
+
+- Login succeeds but menu items are missing.
+	- User is authenticated but has no role claims.
+	- Verify app role assignment in Enterprise applications and token optional claims for roles.

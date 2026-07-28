@@ -20,34 +20,41 @@ public static class ShortenerEnpoints
 
         endpoints.MapGet("/UrlList", UrlList)
             .WithDescription("List all Urls")
-            .WithDisplayName("Url List");
+            .WithDisplayName("Url List")
+            .RequireAuthorization("UrlCreatorOrAbove");
 
 
         // POSTS
 
         endpoints.MapPost("/UrlCreate", UrlCreate)
             .WithDescription("Create a new Short URL")
-            .WithDisplayName("Url Create");
+            .WithDisplayName("Url Create")
+            .RequireAuthorization("UrlCreatorOrAbove");
 
         endpoints.MapPost("/UrlUpdate", UrlUpdate)
             .WithDescription("Update a Url")
-            .WithDisplayName("Url Update");
+            .WithDisplayName("Url Update")
+            .RequireAuthorization("UrlManagerOrAbove");
 
         endpoints.MapPost("/UrlArchive", UrlArchive)
             .WithDescription("Archive a Url")
-            .WithDisplayName("Url Archive");
+            .WithDisplayName("Url Archive")
+            .RequireAuthorization("UrlManagerOrAbove");
 
         endpoints.MapPost("/UrlClickStatsByDay", UrlClickStatsByDay)
             .WithDescription("Provide Click Statistics by Day")
-            .WithDisplayName("Url Click Statistics By Day");
+            .WithDisplayName("Url Click Statistics By Day")
+            .RequireAuthorization("AdminOnly");
 
         endpoints.MapPost("/UrlDataImport", UrlDataImport)
             .WithDescription("Import Urls from a CSV file")
-            .WithDisplayName("Url Data Import");
+            .WithDisplayName("Url Data Import")
+            .RequireAuthorization("AdminOnly");
 
         endpoints.MapPost("/UrlClickStatsImport", UrlClickStatsImport)
             .WithDescription("Import Click Statistics from a CSV file")
-            .WithDisplayName("Url Click Statistics Import");
+            .WithDisplayName("Url Click Statistics Import")
+            .RequireAuthorization("AdminOnly");
 
     }
 

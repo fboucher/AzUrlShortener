@@ -10,7 +10,7 @@ var urlStorage = builder.AddAzureStorage("url-data");
 
 if (builder.Environment.IsDevelopment())
 {
-    urlStorage.RunAsEmulator();
+	urlStorage.RunAsEmulator();
 }
 
 var strTables = urlStorage.AddTables("strTables");
@@ -28,8 +28,14 @@ var manAPI = builder.AddProject<Projects.Cloud5mins_ShortenerTools_Api>("api")
 						.WithEnvironment("DefaultRedirectUrl",defaultRedirectUrl);
 						//.WithExternalHttpEndpoints(); // If you want to access the API directly
 
-builder.AddProject<Projects.Cloud5mins_ShortenerTools_TinyBlazorAdmin>("admin")
+var admin = builder.AddProject<Projects.Cloud5mins_ShortenerTools_TinyBlazorAdmin>("admin")
 		.WithExternalHttpEndpoints()
 		.WithReference(manAPI);
+
+var managedIdentityClientId = builder.Configuration["MANAGED_IDENTITY_CLIENT_ID"];
+if (!string.IsNullOrWhiteSpace(managedIdentityClientId))
+{
+	admin.WithEnvironment("AzureAd__ClientCredentials__0__ManagedIdentityClientId", managedIdentityClientId);
+}
 
 builder.Build().Run();

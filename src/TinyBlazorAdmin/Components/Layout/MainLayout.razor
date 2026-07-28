@@ -1,8 +1,23 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <FluentLayout>
 	<FluentHeader>
-		Tiny Blazor Admin
+		<FluentStack Orientation="Orientation.Horizontal" Width="100%" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="16">
+			<span style="flex:1">Tiny Blazor Admin</span>
+			<AuthorizeView>
+				<Authorized>
+					<FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
+						<FluentIcon Value="@(new Icons.Regular.Size20.Person())" Color="Color.Fill" />
+						<span>@context.User.Identity?.Name</span>
+						<FluentAnchor Href="MicrosoftIdentity/Account/SignOut" Appearance="Appearance.Accent">Sign out</FluentAnchor>
+					</FluentStack>
+				</Authorized>
+				<NotAuthorized>
+					<FluentAnchor Href="MicrosoftIdentity/Account/SignIn" Appearance="Appearance.Accent">Sign in</FluentAnchor>
+				</NotAuthorized>
+			</AuthorizeView>
+		</FluentStack>
 	</FluentHeader>
 	<FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
 		<NavMenu />
@@ -15,11 +30,11 @@
 	<FluentFooter>
 		<FluentStack Orientation="Orientation.Horizontal" HorizontalGap="20">
 			<a href="https://www.fluentui-blazor.net" target="_blank">
-				Documentation and demos
+			Documentation and demos
 			</a>
 
 			<a href="https://learn.microsoft.com/en-us/aspnet/core/blazor" target="_blank">
-				About Blazor
+			About Blazor
 			</a>
 		</FluentStack>
 	</FluentFooter>
