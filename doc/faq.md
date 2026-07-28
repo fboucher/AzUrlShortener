@@ -255,3 +255,23 @@ az containerapp replica list -g rg-<your-env-name> -n admin -o table
 ```powershell
 az containerapp update -g rg-<your-env-name> -n admin --remove-env-vars properties.configuration.ingress.stickySessions.affinity
 ```
+
+## How to validate setup configuration
+
+To validate your AzUrlShortener setup configuration, you can run the setup validator script located at `./src/tools/validate-setup.ps1`.
+
+From the `src` directory, run:
+
+```powershell
+pwsh ./tools/validate-setup.ps1
+```
+
+This script will check your configuration and report any issues with:
+- App registrations
+- Managed identities
+- Federated credentials
+- App role assignments
+- Container app environment variables
+- Token claims configuration
+
+The validator helps ensure all components are properly configured for secure operation.
