@@ -6,17 +6,11 @@ var customDomain = builder.AddParameter("CustomDomain");
 var defaultRedirectUrl = builder.AddParameter("DefaultRedirectUrl");
 
 // To share the same storage as AppHost.Redirect, replace the storage creation below with:
-// var existingStorageName = builder.AddParameter("existingStorageName");
-// var existingStorageRg = builder.AddParameter("existingStorageResourceGroup");
-// var urlStorage = builder.AddAzureStorage("url-data")
-//     .AsExisting(existingStorageName, existingStorageRg);
+var existingStorageName = builder.AddParameter("existingStorageName");
+var existingStorageResourceGroup = builder.AddParameter("existingStorageResourceGroup");
 
-var urlStorage = builder.AddAzureStorage("url-data");
-
-if (builder.Environment.IsDevelopment())
-{
-    urlStorage.RunAsEmulator();
-}
+var urlStorage = builder.AddAzureStorage("url-data")
+                        .AsExisting(existingStorageName, existingStorageResourceGroup);
 
 var strTables = urlStorage.AddTables("strTables");
 
