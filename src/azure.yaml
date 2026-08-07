@@ -1,15 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
-
-name: budget-azUrl
-services:
-  azfunc-light:
-    project: ./FunctionsLight/Cloud5mins.ShortenerTools.FunctionsLight.csproj
+name: azurlshortener
+services:  
+  app:
     language: dotnet
-    host: function 
-
-  
-  admin:
-    project: ./TinyBlazorAdmin/Cloud5mins.ShortenerTools.TinyBlazorAdmin.csproj
-    language: dotnet
-    host: appservice
+    project: ./AppHost/Cloud5mins.ShortenerTools.AppHost.csproj
+    host: containerapp

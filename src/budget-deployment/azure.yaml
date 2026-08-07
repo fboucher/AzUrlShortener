@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+
+name: budget-azUrl
+infra:
+  provider: bicep
+  path: ./infra
+services:
+  azfunc-light:
+    project: ../FunctionsLight/Cloud5mins.ShortenerTools.FunctionsLight.csproj
+    language: dotnet
+    host: function
+
+  api:
+    project: ../Api/Cloud5mins.ShortenerTools.Api.csproj
+    language: dotnet
+    host: appservice
+
+  admin:
+    project: ../TinyBlazorAdmin/Cloud5mins.ShortenerTools.TinyBlazorAdmin.csproj
+    language: dotnet
+    host: appservice
