@@ -34,10 +34,14 @@ module resources './resources.bicep' = {
     principalId: principalId
     CustomDomain: CustomDomain
     DefaultRedirectUrl: DefaultRedirectUrl
+    urlDataTableEndpoint: url_data.outputs.tableEndpoint
+    funcStorageBlobEndpoint: funcstoragea17ca.outputs.blobEndpoint
+    funcStorageQueueEndpoint: funcstoragea17ca.outputs.queueEndpoint
+    funcStorageTableEndpoint: funcstoragea17ca.outputs.tableEndpoint
   }
 }
 
-module funcstoragea17ca '../../infra/funcstoragea17ca/funcstoragea17ca.module.bicep' = {
+module funcstoragea17ca './funcstoragea17ca/funcstoragea17ca.module.bicep' = {
   name: 'funcstoragea17ca'
   scope: rg
   params: {
@@ -45,7 +49,7 @@ module funcstoragea17ca '../../infra/funcstoragea17ca/funcstoragea17ca.module.bi
   }
 }
 
-module funcstoragea17ca_roles '../../infra/funcstoragea17ca-roles/funcstoragea17ca-roles.module.bicep' = {
+module funcstoragea17ca_roles './funcstoragea17ca-roles/funcstoragea17ca-roles.module.bicep' = {
   name: 'funcstoragea17ca-roles'
   scope: rg
   params: {
@@ -56,7 +60,7 @@ module funcstoragea17ca_roles '../../infra/funcstoragea17ca-roles/funcstoragea17
   }
 }
 
-module url_data '../../infra/url-data/url-data.module.bicep' = {
+module url_data './url-data/url-data.module.bicep' = {
   name: 'url-data'
   scope: rg
   params: {
@@ -64,7 +68,7 @@ module url_data '../../infra/url-data/url-data.module.bicep' = {
   }
 }
 
-module url_data_roles '../../infra/url-data-roles/url-data-roles.module.bicep' = {
+module url_data_roles './url-data-roles/url-data-roles.module.bicep' = {
   name: 'url-data-roles'
   scope: rg
   params: {

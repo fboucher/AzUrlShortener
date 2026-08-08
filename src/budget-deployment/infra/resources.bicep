@@ -13,6 +13,18 @@ param CustomDomain string
 @description('Default redirect URL passed to API and function services')
 param DefaultRedirectUrl string
 
+@description('Table service endpoint of the url-data storage account (for URL shortener data)')
+param urlDataTableEndpoint string
+
+@description('Blob service endpoint of the func storage account (AzureWebJobsStorage)')
+param funcStorageBlobEndpoint string
+
+@description('Queue service endpoint of the func storage account (AzureWebJobsStorage)')
+param funcStorageQueueEndpoint string
+
+@description('Table service endpoint of the func storage account (AzureWebJobsStorage)')
+param funcStorageTableEndpoint string
+
 var resourceToken = uniqueString(resourceGroup().id)
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
@@ -92,6 +104,32 @@ resource functionSite 'Microsoft.Web/sites@2023-12-01' = {
           name: 'DefaultRedirectUrl'
           value: DefaultRedirectUrl
         }
+        // AzureWebJobsStorage uses identity-based access (no connection string)
+        {
+          name: 'AzureWebJobsStorage__blobServiceUri'
+          value: funcStorageBlobEndpoint
+        }
+        {
+          name: 'AzureWebJobsStorage__queueServiceUri'
+          value: funcStorageQueueEndpoint
+        }
+        {
+          name: 'AzureWebJobsStorage__tableServiceUri'
+          value: funcStorageTableEndpoint
+        }
+        {
+          name: 'AzureWebJobsStorage__credential'
+          value: 'managedidentity'
+        }
+        {
+          name: 'AzureWebJobsStorage__clientId'
+          value: managedIdentity.properties.clientId
+        }
+        // strTables connection used by AddAzureTableClient("strTables")
+        {
+          name: 'ConnectionStrings__strTables'
+          value: urlDataTableEndpoint
+        }
       ]
     }
   }
@@ -129,6 +167,11 @@ resource apiSite 'Microsoft.Web/sites@2023-12-01' = {
         {
           name: 'DefaultRedirectUrl'
           value: DefaultRedirectUrl
+        }
+        // strTables connection used by AddAzureTableClient("strTables")
+        {
+          name: 'ConnectionStrings__strTables'
+          value: urlDataTableEndpoint
         }
       ]
     }
