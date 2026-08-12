@@ -43,13 +43,39 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
     family: 'B'
     capacity: 1
   }
-  kind: 'app'
+  // Linux is required for App Service sidecar containers
+  kind: 'linux'
   properties: {
-    reserved: false
+    reserved: true
   }
   tags: union(tags, {
     'aspire-resource-name': 'budget-appservice-plan'
   })
+}
+
+// Container registry to host the API sidecar image
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
+  name: 'acr${resourceToken}'
+  location: location
+  sku: {
+    name: 'Basic'
+  }
+  properties: {
+    adminUserEnabled: false
+  }
+  tags: tags
+}
+
+// Allow the managed identity to pull images from ACR
+resource acrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  // AcrPull built-in role: 7f951dda-4ed3-4680-a7ca-43fe172d538d
+  name: guid(containerRegistry.id, managedIdentity.id, '7f951dda-4ed3-4680-a7ca-43fe172d538d')
+  scope: containerRegistry
+  properties: {
+    principalId: managedIdentity.properties.principalId
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
+    principalType: 'ServicePrincipal'
+  }
 }
 
 resource functionConsumptionPlan 'Microsoft.Web/serverfarms@2023-12-01' = {
@@ -139,10 +165,16 @@ resource functionSite 'Microsoft.Web/sites@2023-12-01' = {
   })
 }
 
-resource apiSite 'Microsoft.Web/sites@2023-12-01' = {
-  name: 'api-${resourceToken}'
+// apiSite removed – the API is now deployed as a sidecar container on adminSite.
+// See the apiSidecar sitecontainer resource below.
+
+// Admin site – Linux code-based app (main container receives all external traffic).
+// The API runs as a sidecar container on the same site unit and is only
+// reachable via localhost:8080 (never from the internet).
+resource adminSite 'Microsoft.Web/sites@2023-12-01' = {
+  name: 'admin-${resourceToken}'
   location: location
-  kind: 'app'
+  kind: 'app,linux'
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -156,10 +188,20 @@ resource apiSite 'Microsoft.Web/sites@2023-12-01' = {
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
       appSettings: [
+        // ── Admin settings ──────────────────────────────────────────────────
         {
           name: 'AZURE_CLIENT_ID'
           value: managedIdentity.properties.clientId
         }
+        // Aspire service-discovery: route API calls to the sidecar on localhost.
+        // The HTTPS key is intentionally omitted so the client uses plain HTTP
+        // for localhost-to-localhost communication.
+        {
+          name: 'services__api__http__0'
+          value: 'http://localhost:8080'
+        }
+        // ── API settings (inherited by the sidecar via
+        //    inheritAppSettingsAndConnectionStrings: true) ──────────────────
         {
           name: 'CustomDomain'
           value: CustomDomain
@@ -177,55 +219,35 @@ resource apiSite 'Microsoft.Web/sites@2023-12-01' = {
     }
   }
   tags: union(tags, {
-    'azd-service-name': 'api'
-    'aspire-resource-name': 'api'
-  })
-}
-
-resource adminSite 'Microsoft.Web/sites@2023-12-01' = {
-  name: 'admin-${resourceToken}'
-  location: location
-  kind: 'app'
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
-  }
-  properties: {
-    serverFarmId: appServicePlan.id
-    httpsOnly: true
-    siteConfig: {
-      ftpsState: 'Disabled'
-      minTlsVersion: '1.2'
-      appSettings: [
-        {
-          name: 'AZURE_CLIENT_ID'
-          value: managedIdentity.properties.clientId
-        }
-        {
-          name: 'API_HTTP'
-          value: 'https://${apiSite.properties.defaultHostName}'
-        }
-        {
-          name: 'API_HTTPS'
-          value: 'https://${apiSite.properties.defaultHostName}'
-        }
-        {
-          name: 'services__api__http__0'
-          value: 'https://${apiSite.properties.defaultHostName}'
-        }
-        {
-          name: 'services__api__https__0'
-          value: 'https://${apiSite.properties.defaultHostName}'
-        }
-      ]
-    }
-  }
-  tags: union(tags, {
     'azd-service-name': 'admin'
     'aspire-resource-name': 'admin'
   })
+}
+
+// API sidecar container – shares the same network namespace as adminSite.
+// App Service only routes inbound internet traffic to the main (admin) container;
+// this container is exclusively reachable via http://localhost:8080 from within
+// the site unit.
+resource apiSidecar 'Microsoft.Web/sites/sitecontainers@2024-04-01' = {
+  parent: adminSite
+  name: 'api'
+  properties: {
+    // Image is pushed to ACR by the postprovision hook.
+    // 'latest' is refreshed by restarting the site after each push.
+    image: '${containerRegistry.properties.loginServer}/api:latest'
+    isMain: false
+    targetPort: '8080'
+    // Pull image using the site's user-assigned managed identity
+    authType: 'UserAssigned'
+    userManagedIdentityClientId: managedIdentity.properties.clientId
+    // All app settings on adminSite are inherited by the sidecar as env vars.
+    // This gives the API its AZURE_CLIENT_ID, CustomDomain, DefaultRedirectUrl,
+    // and ConnectionStrings__strTables without duplicating them.
+    inheritAppSettingsAndConnectionStrings: true
+  }
+  dependsOn: [
+    acrPullRole
+  ]
 }
 
 resource principalRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (!empty(principalId)) {
@@ -242,5 +264,6 @@ output MANAGED_IDENTITY_NAME string = managedIdentity.name
 output MANAGED_IDENTITY_PRINCIPAL_ID string = managedIdentity.properties.principalId
 output AZURE_APP_SERVICE_PLAN_NAME string = appServicePlan.name
 output AZURE_FUNCTION_APP_NAME string = functionSite.name
-output AZURE_API_APP_NAME string = apiSite.name
 output AZURE_ADMIN_APP_NAME string = adminSite.name
+output AZURE_CONTAINER_REGISTRY_NAME string = containerRegistry.name
+output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.loginServer

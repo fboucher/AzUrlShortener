@@ -1,0 +1,11 @@
+In this folder `src/budget-deployment` I have the deployment IaC to deploy my entire solution and it works. But right now it deploys the web site admin: `../TinyBlazorAdmin/Cloud5mins.ShortenerTools.TinyBlazorAdmin.csproj`
+
+with it's api: `../Api/Cloud5mins.ShortenerTools.Api.csproj` in two individual app service.
+
+It would be better if they were deploy in the same App Service using sidecar.
+
+I would like to have the "api" NOT reachable from the internet. Like with a docker compose setup when a backend container is only accessible by the frontend container.
+
+Here admin is the frontend and api is the backend
+
+I saw that post that explains a few things about sidecar deployments in Azure App Service https://azure.github.io/AppService/2025/03/06/Sidecars-Deep-Dive-Part1.html
