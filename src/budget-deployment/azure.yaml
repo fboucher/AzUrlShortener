@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+
+name: budget-azUrl
+infra:
+  provider: bicep
+  path: ./infra
+services:
+  azfunc-light:
+    project: ../FunctionsLight/Cloud5mins.ShortenerTools.FunctionsLight.csproj
+    language: dotnet
+    host: function
+
+  # The API is no longer a standalone App Service.
+  # It runs as a private sidecar container on the admin App Service
+  # (only reachable via http://localhost:8081 from within the same site unit).
+  # The sidecar image is built and pushed by the postprovision hook below.
+
+  admin:
+    project: ../TinyBlazorAdmin/Cloud5mins.ShortenerTools.TinyBlazorAdmin.csproj
+    language: dotnet
+    host: appservice
+
+hooks:
+  # After infrastructure is provisioned, build the API container image with
+  # ACR Tasks (no local Docker daemon required) and restart the admin site so
+  # App Service pulls the fresh image for the sidecar container.
+  postprovision:
+    posix:
+      shell: sh
+      run: hooks/deploy-api-sidecar.sh
+      interactive: false

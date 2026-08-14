@@ -24,24 +24,32 @@ resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   location: location
   tags: tags
 }
-module resources 'resources.bicep' = {
+
+module resources './resources.bicep' = {
   scope: rg
   name: 'resources'
   params: {
     location: location
     tags: tags
     principalId: principalId
+    CustomDomain: CustomDomain
+    DefaultRedirectUrl: DefaultRedirectUrl
+    urlDataTableEndpoint: url_data.outputs.tableEndpoint
+    funcStorageBlobEndpoint: funcstoragea17ca.outputs.blobEndpoint
+    funcStorageQueueEndpoint: funcstoragea17ca.outputs.queueEndpoint
+    funcStorageTableEndpoint: funcstoragea17ca.outputs.tableEndpoint
   }
 }
 
-module funcstoragea17ca 'funcstoragea17ca/funcstoragea17ca.module.bicep' = {
+module funcstoragea17ca './funcstoragea17ca/funcstoragea17ca.module.bicep' = {
   name: 'funcstoragea17ca'
   scope: rg
   params: {
     location: location
   }
 }
-module funcstoragea17ca_roles 'funcstoragea17ca-roles/funcstoragea17ca-roles.module.bicep' = {
+
+module funcstoragea17ca_roles './funcstoragea17ca-roles/funcstoragea17ca-roles.module.bicep' = {
   name: 'funcstoragea17ca-roles'
   scope: rg
   params: {
@@ -51,14 +59,16 @@ module funcstoragea17ca_roles 'funcstoragea17ca-roles/funcstoragea17ca-roles.mod
     principalType: 'ServicePrincipal'
   }
 }
-module url_data 'url-data/url-data.module.bicep' = {
+
+module url_data './url-data/url-data.module.bicep' = {
   name: 'url-data'
   scope: rg
   params: {
     location: location
   }
 }
-module url_data_roles 'url-data-roles/url-data-roles.module.bicep' = {
+
+module url_data_roles './url-data-roles/url-data-roles.module.bicep' = {
   name: 'url-data-roles'
   scope: rg
   params: {
@@ -71,13 +81,11 @@ module url_data_roles 'url-data-roles/url-data-roles.module.bicep' = {
 
 output MANAGED_IDENTITY_CLIENT_ID string = resources.outputs.MANAGED_IDENTITY_CLIENT_ID
 output MANAGED_IDENTITY_NAME string = resources.outputs.MANAGED_IDENTITY_NAME
-output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = resources.outputs.AZURE_LOG_ANALYTICS_WORKSPACE_NAME
-output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
-output AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID string = resources.outputs.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID
+output AZURE_APP_SERVICE_PLAN_NAME string = resources.outputs.AZURE_APP_SERVICE_PLAN_NAME
+output AZURE_FUNCTION_APP_NAME string = resources.outputs.AZURE_FUNCTION_APP_NAME
+output AZURE_ADMIN_APP_NAME string = resources.outputs.AZURE_ADMIN_APP_NAME
 output AZURE_CONTAINER_REGISTRY_NAME string = resources.outputs.AZURE_CONTAINER_REGISTRY_NAME
-output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_NAME
-output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_ID
-output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
+output AZURE_CONTAINER_REGISTRY_ENDPOINT string = resources.outputs.AZURE_CONTAINER_REGISTRY_ENDPOINT
 output FUNCSTORAGEA17CA_BLOBENDPOINT string = funcstoragea17ca.outputs.blobEndpoint
 output FUNCSTORAGEA17CA_DATALAKEENDPOINT string = funcstoragea17ca.outputs.dataLakeEndpoint
 output FUNCSTORAGEA17CA_QUEUEENDPOINT string = funcstoragea17ca.outputs.queueEndpoint
