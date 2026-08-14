@@ -13,7 +13,7 @@ services:
 
   # The API is no longer a standalone App Service.
   # It runs as a private sidecar container on the admin App Service
-  # (only reachable via http://localhost:8080 from within the same site unit).
+  # (only reachable via http://localhost:8081 from within the same site unit).
   # The sidecar image is built and pushed by the postprovision hook below.
 
   admin:

@@ -23,9 +23,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 
 # Listen on HTTP only; App Service routes external traffic to the admin container.
-# UseHttpsRedirection is a no-op when no HTTPS port is configured.
-ENV ASPNETCORE_HTTP_PORTS=8080
-EXPOSE 8080
+# Use a dedicated internal port so the main admin app (which listens on 8080)
+# can coexist with the sidecar container in the same site unit.
+ENV ASPNETCORE_HTTP_PORTS=8081
+EXPOSE 8081
 
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Cloud5mins.ShortenerTools.Api.dll"]

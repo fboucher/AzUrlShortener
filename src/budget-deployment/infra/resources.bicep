@@ -185,6 +185,10 @@ resource adminSite 'Microsoft.Web/sites@2023-12-01' = {
     serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
+      // Linux App Service must be explicitly configured for the .NET runtime;
+      // otherwise it defaults to the generic PHP container and the admin app
+      // never receives the published Blazor app bundle.
+      linuxFxVersion: 'DOTNETCORE|10.0'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
       appSettings: [
@@ -194,11 +198,11 @@ resource adminSite 'Microsoft.Web/sites@2023-12-01' = {
           value: managedIdentity.properties.clientId
         }
         // Aspire service-discovery: route API calls to the sidecar on localhost.
-        // The HTTPS key is intentionally omitted so the client uses plain HTTP
-        // for localhost-to-localhost communication.
+        // The main admin app listens on 8080, so the private sidecar needs its
+        // own internal port to avoid a bind conflict in the shared site unit.
         {
           name: 'services__api__http__0'
-          value: 'http://localhost:8080'
+          value: 'http://localhost:8081'
         }
         // ── API settings (inherited by the sidecar via
         //    inheritAppSettingsAndConnectionStrings: true) ──────────────────
@@ -226,7 +230,7 @@ resource adminSite 'Microsoft.Web/sites@2023-12-01' = {
 
 // API sidecar container – shares the same network namespace as adminSite.
 // App Service only routes inbound internet traffic to the main (admin) container;
-// this container is exclusively reachable via http://localhost:8080 from within
+// this container is exclusively reachable via http://localhost:8081 from within
 // the site unit.
 resource apiSidecar 'Microsoft.Web/sites/sitecontainers@2024-04-01' = {
   parent: adminSite
@@ -236,14 +240,12 @@ resource apiSidecar 'Microsoft.Web/sites/sitecontainers@2024-04-01' = {
     // 'latest' is refreshed by restarting the site after each push.
     image: '${containerRegistry.properties.loginServer}/api:latest'
     isMain: false
-    targetPort: '8080'
-    // Pull image using the site's user-assigned managed identity
+    targetPort: '8081'
+    // Pull image using the site's user-assigned managed identity.
+    // App Service passes all app settings from the main site into the sidecar
+    // unless a specific override is defined.
     authType: 'UserAssigned'
     userManagedIdentityClientId: managedIdentity.properties.clientId
-    // All app settings on adminSite are inherited by the sidecar as env vars.
-    // This gives the API its AZURE_CLIENT_ID, CustomDomain, DefaultRedirectUrl,
-    // and ConnectionStrings__strTables without duplicating them.
-    inheritAppSettingsAndConnectionStrings: true
   }
   dependsOn: [
     acrPullRole
