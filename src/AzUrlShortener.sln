@@ -15,20 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud5mins.ShortenerTools.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud5mins.ShortenerTools.TinyBlazorAdmin", "TinyBlazorAdmin\Cloud5mins.ShortenerTools.TinyBlazorAdmin.csproj", "{88EAB6E9-CD20-4A6B-86A0-38CACA87FC7E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppHost.Redirect", "AppHost.Redirect", "{48743B4B-BDEA-DC59-E766-996CB80EA03B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud5mins.ShortenerTools.AppHost.Redirect", "AppHost.Redirect\Cloud5mins.ShortenerTools.AppHost.Redirect.csproj", "{1C276950-388A-4CCF-998F-308534197198}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FunctionsLight", "FunctionsLight", "{978765B0-30B3-FFB1-F51A-527AE8C5D709}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppHost.Admin", "AppHost.Admin", "{5FE8D6DD-1E2C-845E-148A-9E14D73F3A3B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cloud5mins.ShortenerTools.AppHost.Admin", "AppHost.Admin\Cloud5mins.ShortenerTools.AppHost.Admin.csproj", "{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{D82C56D6-B2CD-F611-9E31-04638F7EC30E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TinyBlazorAdmin", "TinyBlazorAdmin", "{E0AB1A1F-3E51-5469-E2E5-E04CC29A76AB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,36 +97,8 @@ Global
 		{88EAB6E9-CD20-4A6B-86A0-38CACA87FC7E}.Release|x64.Build.0 = Release|Any CPU
 		{88EAB6E9-CD20-4A6B-86A0-38CACA87FC7E}.Release|x86.ActiveCfg = Release|Any CPU
 		{88EAB6E9-CD20-4A6B-86A0-38CACA87FC7E}.Release|x86.Build.0 = Release|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Debug|x64.Build.0 = Debug|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Debug|x86.Build.0 = Debug|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Release|x64.ActiveCfg = Release|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Release|x64.Build.0 = Release|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Release|x86.ActiveCfg = Release|Any CPU
-		{1C276950-388A-4CCF-998F-308534197198}.Release|x86.Build.0 = Release|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Debug|x64.Build.0 = Debug|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Debug|x86.Build.0 = Debug|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Release|x64.ActiveCfg = Release|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Release|x64.Build.0 = Release|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Release|x86.ActiveCfg = Release|Any CPU
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{1C276950-388A-4CCF-998F-308534197198} = {48743B4B-BDEA-DC59-E766-996CB80EA03B}
-		{FFDD6A77-8DCF-4137-9566-9E15EE0358ED} = {5FE8D6DD-1E2C-845E-148A-9E14D73F3A3B}
 	EndGlobalSection
 EndGlobal
