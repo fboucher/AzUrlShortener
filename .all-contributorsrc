@@ -6,7 +6,7 @@
   "contributorsPerLine": 7,
   "skipCi": true,
   "projectName": "AzUrlShortener",
-  "projectOwner": "microsoft",
+  "projectOwner": "fboucher",
   "repoType": "github",
   "repoHost": "https://github.com",
   "contributors": [
@@ -223,6 +223,15 @@
       "profile": "https://davidop.code.blog/",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "michaelmsonne",
+      "name": "Michael Morten Sonne | Microsoft MVP",
+      "avatar_url": "https://avatars.githubusercontent.com/u/49366751?v=4",
+      "profile": "https://blog.sonnes.cloud",
+      "contributions": [
+        "bug"
       ]
     }
   ],
