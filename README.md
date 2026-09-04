@@ -3,7 +3,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/microsoft/AzUrlShortener)  ![.NET](https://img.shields.io/badge/10.0-512BD4?logo=dotnet&logoColor=fff) [![Build](https://github.com/microsoft/AzUrlShortener/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/microsoft/AzUrlShortener/actions/workflows/build.yml) ![GitHub License](https://img.shields.io/github/license/microsoft/AzUrlShortener) [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?&logo=discord&logoColor=white)](https://discord.gg/6zA3jKw)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-23-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-24-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 
@@ -116,6 +116,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ddematheu2"><img src="https://avatars.githubusercontent.com/u/43075365?v=4?s=100" width="100px;" alt="ddematheu2"/><br /><sub><b>ddematheu2</b></sub></a><br /><a href="https://github.com/microsoft/AzUrlShortener/issues?q=author%3Addematheu2" title="Bug reports">🐛</a> <a href="https://github.com/microsoft/AzUrlShortener/commits?author=ddematheu2" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://davidop.code.blog/"><img src="https://avatars.githubusercontent.com/u/7433346?v=4?s=100" width="100px;" alt="David Oliva Paredes"/><br /><sub><b>David Oliva Paredes</b></sub></a><br /><a href="https://github.com/microsoft/AzUrlShortener/commits?author=davidop" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://blog.sonnes.cloud"><img src="https://avatars.githubusercontent.com/u/49366751?v=4?s=100" width="100px;" alt="Michael Morten Sonne &#124; Microsoft MVP"/><br /><sub><b>Michael Morten Sonne &#124; Microsoft MVP</b></sub></a><br /><a href="https://github.com/microsoft/AzUrlShortener/issues?q=author%3Amichaelmsonne" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>
