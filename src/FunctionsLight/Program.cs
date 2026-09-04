@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
-builder.AddAzureTableClient("strTables");
+builder.AddAzureTableServiceClient("strTables");
 
 builder.ConfigureFunctionsWebApplication();
 
