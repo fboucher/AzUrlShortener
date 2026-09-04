@@ -224,15 +224,6 @@
       "contributions": [
         "code"
       ]
-    },
-    {
-      "login": "michaelmsonne",
-      "name": "Michael Morten Sonne | Microsoft MVP",
-      "avatar_url": "https://avatars.githubusercontent.com/u/49366751?v=4",
-      "profile": "https://blog.sonnes.cloud",
-      "contributions": [
-        "bug"
-      ]
     }
   ],
   "commitConvention": "angular",
