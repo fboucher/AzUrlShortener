@@ -1,4 +1,5 @@
 @page "/urlmanager"
+@attribute [Authorize(Roles = "UrlCreator,UrlManager,Admin")]
 
 @using System.Net
 @using Cloud5mins.ShortenerTools.Core.Domain
@@ -60,8 +61,10 @@
             </TemplateColumn>
             <PropertyColumn Title="Created" Property="@(c => c!.CreatedDate)" Sortable="true" />
             <TemplateColumn Width="100px" Sortable="false">
-                <FluentButton OnClick="@(() => EditShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Edit())" Title="Edit" />
-                <FluentButton OnClick="@(async () => await ArchiveShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Archive())" Title="Archive" />
+                <AuthorizeView Roles="UrlManager,Admin" Context="authContext">
+                    <FluentButton OnClick="@(() => EditShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Edit())" Title="Edit" />
+                    <FluentButton OnClick="@(async () => await ArchiveShortUrl(context))" IconEnd="@(new Icons.Regular.Size16.Archive())" Title="Archive" />
+                </AuthorizeView>
             </TemplateColumn>
         </ChildContent>
         <EmptyContent>

@@ -1,6 +1,7 @@
 using System;
 using Cloud5mins.ShortenerTools.Core.Domain;
 using Cloud5mins.ShortenerTools.Core.Messages;
+using System.Text.Json;
 
 namespace Cloud5mins.ShortenerTools.TinyBlazorAdmin;
 
@@ -9,7 +10,7 @@ public class UrlManagerClient(HttpClient httpClient)
 
 	public async Task<IQueryable<ShortUrlEntity>?> GetUrls()
     {
-		IQueryable<ShortUrlEntity> urlList = null;
+		IQueryable<ShortUrlEntity>? urlList = null;
 		try{
 			using var response = await httpClient.GetAsync("/api/UrlList");
 			if(response.IsSuccessStatusCode){
@@ -33,8 +34,7 @@ public class UrlManagerClient(HttpClient httpClient)
 				result = (true, "Success");
 			}
 			else{
-				var errorDetails = await response.Content.ReadFromJsonAsync<DetailedBadRequest>();
-				result = (false, errorDetails!.Message);
+				result = (false, await GetErrorMessageAsync(response));
 			}
 		}
 		catch(Exception ex){
@@ -42,6 +42,46 @@ public class UrlManagerClient(HttpClient httpClient)
 			result = (false, ex.Message);
 		}
 		return result;
+	}
+
+	private static async Task<string> GetErrorMessageAsync(HttpResponseMessage response)
+	{
+		var statusText = $"{(int)response.StatusCode} {response.ReasonPhrase}".Trim();
+		if (response.Content.Headers.ContentLength == 0)
+		{
+			return $"Request failed: {statusText}";
+		}
+
+		var mediaType = response.Content.Headers.ContentType?.MediaType ?? string.Empty;
+		if (mediaType.Contains("json", StringComparison.OrdinalIgnoreCase))
+		{
+			try
+			{
+				var details = await response.Content.ReadFromJsonAsync<DetailedBadRequest>();
+				if (!string.IsNullOrWhiteSpace(details?.Message))
+				{
+					return details.Message;
+				}
+			}
+			catch (JsonException)
+			{
+				// Fall through to raw body fallback.
+			}
+		}
+
+		var body = await response.Content.ReadAsStringAsync();
+		if (string.IsNullOrWhiteSpace(body))
+		{
+			return $"Request failed: {statusText}";
+		}
+
+		var cleanedBody = body.Replace("\r", " ").Replace("\n", " ").Trim();
+		if (cleanedBody.Length > 200)
+		{
+			cleanedBody = cleanedBody[..200] + "...";
+		}
+
+		return $"Request failed: {statusText}. {cleanedBody}";
 	}
 
 	public async Task<bool> UrlArchive(ShortUrlEntity shortUrl)

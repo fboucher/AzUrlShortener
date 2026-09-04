@@ -1,0 +1,37 @@
+@page "/access-denied"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Access Denied</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" Style="margin-top: 4rem; text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;">
+	<FluentIcon Value="@(new Icons.Regular.Size48.LockClosed())" Color="Color.Warning" />
+	<h1>Access Denied</h1>
+
+	@if (!string.IsNullOrEmpty(reason))
+	{
+		<FluentMessageBar Intent="MessageIntent.Error" Style="text-align: left; width: 100%;">
+			<b>Authentication error:</b> @reason
+		</FluentMessageBar>
+	}
+	else
+	{
+		<p>You do not have permission to view this page.</p>
+		<p>Please contact your administrator to request access.</p>
+	}
+
+	<FluentAnchor Href="/" Appearance="Appearance.Accent" Style="margin-top: 1rem;">
+		<FluentIcon Value="@(new Icons.Regular.Size16.Home())" Color="Color.Fill" />
+		&nbsp;Return to Home
+	</FluentAnchor>
+</FluentStack>
+
+@code {
+	private string? reason;
+
+	protected override void OnInitialized()
+	{
+		var uri = new Uri(NavigationManager.Uri);
+		var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+		reason = query["reason"];
+	}
+}

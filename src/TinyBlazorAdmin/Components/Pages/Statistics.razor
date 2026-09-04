@@ -1,5 +1,6 @@
 @page "/statistics"
 @page "/statistics/{vanity}"
+@attribute [Authorize(Roles = "Admin")]
 
 @using BlazorBootstrap
 @using Cloud5mins.ShortenerTools.Core.Messages;
