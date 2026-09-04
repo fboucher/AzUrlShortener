@@ -10,6 +10,7 @@
 - [How does it work?](./how-it-works.md)
 - [Security Considerations](./security-considerations.md)
 - [How to make the api public](./how-to-set-api-public.md)
+- [How to deploy to App Service (budget friendlier version)](./how-deploy-budget-solution.md)
 
 
 ## How to run AzUrlShortener locally
