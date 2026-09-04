@@ -9,7 +9,7 @@ public class UrlManagerClient(HttpClient httpClient)
 
 	public async Task<IQueryable<ShortUrlEntity>?> GetUrls()
     {
-		IQueryable<ShortUrlEntity> urlList = null;
+		IQueryable<ShortUrlEntity>? urlList = null;
 		try{
 			using var response = await httpClient.GetAsync("/api/UrlList");
 			if(response.IsSuccessStatusCode){

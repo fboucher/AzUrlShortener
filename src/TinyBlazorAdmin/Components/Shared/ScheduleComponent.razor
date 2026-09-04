@@ -33,7 +33,7 @@
 @code {
 
     [Parameter]
-    public Schedule? schedule { get; set; }
+    public Schedule schedule { get; set; } = new();
 
     private DateTime startDate;
     private DateTime startTime;

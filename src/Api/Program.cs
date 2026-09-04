@@ -6,7 +6,7 @@ builder.AddServiceDefaults();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.AddAzureTableClient("strTables");
+builder.AddAzureTableServiceClient("strTables");
 
 builder.Services.AddTransient<ILogger>(sp =>
 {

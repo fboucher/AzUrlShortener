@@ -2,16 +2,14 @@ using Azure;
 using Azure.Data.Tables;
 using System.Runtime.Serialization;
 using System.Text.Json;
-using Azure;
-using Azure.Data.Tables;
 
 
 namespace Cloud5mins.ShortenerTools.Core.Domain
 {
     public class ShortUrlEntity : ITableEntity
     {
-        public string Url { get; set; }
-        private string _activeUrl { get; set; }
+        public string Url { get; set; } = string.Empty;
+        private string _activeUrl { get; set; } = string.Empty;
 
         public string ActiveUrl
         {
@@ -24,16 +22,16 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
         }
 
 
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        public string ShortUrl { get; set; }
+        public string ShortUrl { get; set; } = string.Empty;
 
         public int Clicks { get; set; }
 
         public bool? IsArchived { get; set; }
-        public string SchedulesPropertyRaw { get; set; }
+        public string SchedulesPropertyRaw { get; set; } = string.Empty;
 
-        private List<Schedule> _schedules { get; set; }
+        private List<Schedule> _schedules { get; set; } = new();
 
         //[IgnoreProperty]
         [IgnoreDataMember]
@@ -49,7 +47,7 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
                     }
                     else
                     {
-                        _schedules = JsonSerializer.Deserialize<Schedule[]>(SchedulesPropertyRaw).ToList<Schedule>();
+                        _schedules = JsonSerializer.Deserialize<Schedule[]>(SchedulesPropertyRaw)?.ToList() ?? new List<Schedule>();
                     }
                 }
                 return _schedules;
@@ -60,12 +58,12 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
             }
         }
 
-        public string PartitionKey { get; set; }
-        public string RowKey { get; set; }
+        public string PartitionKey { get; set; } = string.Empty;
+        public string RowKey { get; set; } = string.Empty;
         public DateTimeOffset? Timestamp { get; set; }
         public ETag ETag { get; set; }
 
-        public string CreatedDate { get; set; }
+        public string CreatedDate { get; set; } = string.Empty;
 
 
 
@@ -76,17 +74,17 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
             Initialize(longUrl, endUrl, string.Empty, null);
         }
 
-        public ShortUrlEntity(string longUrl, string endUrl, Schedule[] schedules)
+        public ShortUrlEntity(string longUrl, string endUrl, Schedule[]? schedules)
         {
             Initialize(longUrl, endUrl, string.Empty, schedules);
         }
 
-        public ShortUrlEntity(string longUrl, string endUrl, string title, Schedule[] schedules)
+        public ShortUrlEntity(string longUrl, string endUrl, string title, Schedule[]? schedules)
         {
             Initialize(longUrl, endUrl, title, schedules);
         }
 
-        private void Initialize(string longUrl, string endUrl, string title, Schedule[] schedules)
+        private void Initialize(string longUrl, string endUrl, string title, Schedule[]? schedules)
         {
             PartitionKey = endUrl.First().ToString();
             RowKey = endUrl;
