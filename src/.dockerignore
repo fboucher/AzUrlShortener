@@ -1,0 +1,13 @@
+# Exclude build output and other large/unnecessary directories from the
+# Docker build context (used by both local 'docker build' and 'az acr build').
+**/bin/
+**/obj/
+**/.git/
+**/.azure/
+**/node_modules/
+# Exclude other deployment configs – only src/ content is needed
+budget-deployment/
+AppHost/
+infra/
+tools/
+*.md

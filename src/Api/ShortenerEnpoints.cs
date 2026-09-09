@@ -10,8 +10,7 @@ public static class ShortenerEnpoints
 {
     public static void MapShortenerEnpoints(this IEndpointRouteBuilder app)
     {
-        var endpoints = app.MapGroup("api")
-                .WithOpenApi();
+        var endpoints = app.MapGroup("api");
 
         // GETS
 

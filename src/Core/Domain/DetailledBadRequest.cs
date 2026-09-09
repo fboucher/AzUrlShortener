@@ -2,6 +2,6 @@ namespace Cloud5mins.ShortenerTools.Core.Domain
 {
     public class DetailedBadRequest
     {
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
     }
 }
