@@ -39,6 +39,14 @@ module funcstoragea17ca 'funcstoragea17ca/funcstoragea17ca.module.bicep' = {
   scope: rg
   params: {
     location: location
+  }
+}
+module funcstoragea17ca_roles 'funcstoragea17ca-roles/funcstoragea17ca-roles.module.bicep' = {
+  name: 'funcstoragea17ca-roles'
+  scope: rg
+  params: {
+    funcstoragea17ca_outputs_name: funcstoragea17ca.outputs.name
+    location: location
     principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID
     principalType: 'ServicePrincipal'
   }
@@ -48,8 +56,16 @@ module url_data 'url-data/url-data.module.bicep' = {
   scope: rg
   params: {
     location: location
+  }
+}
+module url_data_roles 'url-data-roles/url-data-roles.module.bicep' = {
+  name: 'url-data-roles'
+  scope: rg
+  params: {
+    location: location
     principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID
     principalType: 'ServicePrincipal'
+    url_data_outputs_name: url_data.outputs.name
   }
 }
 
@@ -63,6 +79,7 @@ output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = resources.outputs.AZURE_CO
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_ID
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
 output FUNCSTORAGEA17CA_BLOBENDPOINT string = funcstoragea17ca.outputs.blobEndpoint
+output FUNCSTORAGEA17CA_DATALAKEENDPOINT string = funcstoragea17ca.outputs.dataLakeEndpoint
 output FUNCSTORAGEA17CA_QUEUEENDPOINT string = funcstoragea17ca.outputs.queueEndpoint
 output FUNCSTORAGEA17CA_TABLEENDPOINT string = funcstoragea17ca.outputs.tableEndpoint
 output URL_DATA_TABLEENDPOINT string = url_data.outputs.tableEndpoint

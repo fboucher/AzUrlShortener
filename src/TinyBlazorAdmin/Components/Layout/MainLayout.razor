@@ -13,12 +13,15 @@
         </FluentBodyContent>
     </FluentStack>
     <FluentFooter>
-        <div class="link1">
-            <a href="https://www.fluentui-blazor.net" target="_blank">Documentation and demos</a>
-        </div>
-        <div class="link2">
-            <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor" target="_blank">About Blazor</a>
-        </div>
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="20">
+            <a href="https://www.fluentui-blazor.net" target="_blank">
+                Documentation and demos
+            </a>
+
+            <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor" target="_blank">
+                About Blazor
+            </a>
+        </FluentStack>
     </FluentFooter>
 </FluentLayout>
 
@@ -34,6 +37,6 @@
 
 
 @code {
-    public DesignThemeModes Mode { get; set; }
-    public OfficeColor? OfficeColor { get; set; }
+	public DesignThemeModes Mode { get; set; }
+	public OfficeColor? OfficeColor { get; set; }
 }

@@ -111,7 +111,7 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
     public async Task<ShortUrlEntity?> GetShortUrlEntityByVanity(string vanity)
     {
         var tblUrls = GetUrlsTable();
-        ShortUrlEntity shortUrlEntity = null;
+        ShortUrlEntity? shortUrlEntity = null;
 
         var result = tblUrls.QueryAsync<ShortUrlEntity>(e => e.RowKey == vanity);
         await foreach (var entity in result)
@@ -126,14 +126,13 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
     {
         TableClient tblUrls = GetUrlsTable();
         var response = await tblUrls.GetEntityAsync<ShortUrlEntity>(row.PartitionKey, row.RowKey);
-        ShortUrlEntity eShortUrl = response.Value as ShortUrlEntity;
-        return eShortUrl;
+        return response.Value;
     }
 
 
     public async Task<bool> IfShortUrlEntityExistByVanity(string vanity)
     {
-        ShortUrlEntity shortUrlEntity = await GetShortUrlEntityByVanity(vanity);
+        ShortUrlEntity? shortUrlEntity = await GetShortUrlEntityByVanity(vanity);
         return (shortUrlEntity != null);
     }
 
@@ -155,11 +154,11 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
 
 
 
-    public async Task<List<ClickStatsEntity>> GetAllStatsByVanity(string vanity, string startDate, string endDate)
+    public async Task<List<ClickStatsEntity>> GetAllStatsByVanity(string vanity, string? startDate, string? endDate)
     {
         var tblStats = GetStatsTable();
-        var sDate = DateOnly.ParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        var eDate = DateOnly.ParseExact(endDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        var sDate = DateOnly.ParseExact(startDate ?? DateOnly.MinValue.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        var eDate = DateOnly.ParseExact(endDate ?? DateOnly.MaxValue.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
         var lstUrlStats = new List<ClickStatsEntity>();
         AsyncPageable<ClickStatsEntity> queryResult;

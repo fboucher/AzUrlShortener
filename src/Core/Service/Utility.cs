@@ -94,8 +94,8 @@ public static class Utility
                         {
                             data.NextId = new NextId
                             {
-                                PartitionKey = csv.GetField("PartitionKey"),
-                                RowKey = csv.GetField("RowKey"),
+                                PartitionKey = csv.GetField("PartitionKey") ?? String.Empty,
+                                RowKey = csv.GetField("RowKey") ?? String.Empty,
                                 Id = csv.GetField<int>("Id")
                             };
                         }
@@ -103,11 +103,11 @@ public static class Utility
                         {
                             var record = new ShortUrlEntity
                             {
-                                PartitionKey = csv.GetField("PartitionKey"),
-                                RowKey = csv.GetField("RowKey"),
+                                PartitionKey = csv.GetField("PartitionKey") ?? String.Empty,
+                                RowKey = csv.GetField("RowKey") ?? String.Empty,
                                 Clicks = csv.GetField<int?>("Clicks") ?? 0,
                                 Title = csv.GetField("Title") ?? String.Empty,
-                                Url = csv.GetField("Url"),
+                                Url = csv.GetField("Url") ?? String.Empty,
                                 SchedulesPropertyRaw = csv.GetField("SchedulesPropertyRaw") ?? String.Empty,
                                 IsArchived = csv.GetField<bool?>("IsArchived") ?? false
                             };
