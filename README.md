@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This repository is archived and no longer maintained. Development continues at [fboucher/AzUrlShortener](https://github.com/fboucher/AzUrlShortener) - please head over there for the latest updates, issues, and contributions.
+
 # Azure Url Shortener (AzUrlShortener)
 
 ![GitHub Release](https://img.shields.io/github/v/release/microsoft/AzUrlShortener)  ![.NET](https://img.shields.io/badge/10.0-512BD4?logo=dotnet&logoColor=fff) [![Build](https://github.com/microsoft/AzUrlShortener/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/microsoft/AzUrlShortener/actions/workflows/build.yml) ![GitHub License](https://img.shields.io/github/license/microsoft/AzUrlShortener) [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?&logo=discord&logoColor=white)](https://discord.gg/6zA3jKw)
