@@ -14,7 +14,7 @@ You need to export to CSV the following tables:
 
 The best settings to export when planning to import using the TinyBlazorAdmin are:
 
-![export_settings](../images/export_settings.png)
+![export_settings](assets/export_settings.png)
 
 To import the data use the Import button in the Settings page.
 
@@ -25,4 +25,4 @@ Here are the settings to use when importing using Azure Storage Explorer:
 - You need to select the data type for each column.
 - Uncheck the checkbox *Ignore empty string values*.
 
-![Import settings when using Azure Storage Explorer](../images/import_using_azStorage-explorer.png)
+![Import settings when using Azure Storage Explorer](assets/import_using_azStorage-explorer.png)
