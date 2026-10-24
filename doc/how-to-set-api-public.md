@@ -7,7 +7,7 @@ When the solution is running locally the API is accessible so you can call it fr
 ## Before deployment
 In the `src\AppHost` project open the `program.cs` file and uncomment the line 
 
-![Uncomment this line](../images/uncomment-public-endpoints.png)
+![Uncomment this line](assets/uncomment-public-endpoints.png)
 
 Deploy, or re-deploy with `az up`.
 
@@ -15,4 +15,4 @@ Deploy, or re-deploy with `az up`.
 ## After deployment
 If you would like to make the endpoints public this can be done via the Azure Portal. From the Azure Container App `api`, click on `Ingress` in the Settings section on the left panel. Then change the `Ingress traffic` to **Accepting traffic from anywhere**
 
-![change the ingress](../images/public-ingress.png)
+![change the ingress](assets/public-ingress.png)
