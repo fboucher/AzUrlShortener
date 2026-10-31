@@ -6,17 +6,17 @@
 
 > To Fork GitHub repository click on the Fork button on the top right of the screen.
 
-![Click on the button Fork](../images/click-fork.png)
+![Click on the button Fork](assets/click-fork.png)
 
 Provide a name. It can be anything, it just needs to be unique in your account (you can keep AzUrlShortener if you want). Add a description it you want and click the button **Create repository from template**. 
 
-![Give it a name description and click Create](../images/fork-details.png)
+![Give it a name description and click Create](assets/fork-details.png)
 
 After a few seconds, you should now be in your version of the AzUrlShortener project. If you need more detail have a look to this GitHub doc: [Fork a repo](https://docs.github.com/en/free-pro-team@latest/github/getting-started-with-github/fork-a-repo).
 
 > Make sure you are currently in YOUR GitHub repository.
 >
->![This should be YOUR repo](../images/your-account.png)
+>![This should be YOUR repo](assets/your-account.png)
 
 
 ## Prerequisites
@@ -63,17 +63,17 @@ After a few seconds, you should now be in your version of the AzUrlShortener pro
 
 After the deployment is complete, you will see the URLs of your applications in the terminal; the one starting by `https://admin` is the admin tools (aka TinyBlazorAdmin), and the one starting with `https://azfunc-light` is the redicrect service. There is also many details about the resources created in Azure, and a link to the Aspire dashboard.
 
-![azd deployment result](../images/deployment-result.png)
+![azd deployment result](assets/deployment-result.png)
 
 ## Add authentication to the admin website
 
 The app is now deployed, but it does not have authentication enabled. Navigate to the [Azure Portal](https://portal.azure.com/), and find the Resource Group you just deployed (e.g., rg-azUrl-dev). From there, select the Container App named **admin**.
 
-![select the Container App admin](../images/select-admin-container-app.png)
+![select the Container App admin](assets/select-admin-container-app.png)
 
 From the left menu, select **Authentication** and click **Add identity provider**.
 
-![select Authentication](../images/auth-and-provider.png)
+![select Authentication](assets/auth-and-provider.png)
 
 You can choose between multiple providers, but let's use Microsoft since it's deployed in Azure and you are already logged in. Once Microsoft is chosen, you will see many configuration options. Select the recommended client secret expiration (e.g., 180 days).
 
