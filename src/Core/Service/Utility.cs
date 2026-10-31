@@ -13,33 +13,35 @@ public static class Utility
 {
     //reshuffled for randomisation, same unique characters just jumbled up, you can replace with your own version
     private const string ConversionCode = "FjTG0s5dgWkbLf_8etOZqMzNhmp7u6lUJoXIDiQB9-wRxCKyrPcv4En3Y21aASHV";
-    private static readonly int Base = ConversionCode.Length;
-    //sets the length of the unique code to add to vanity
-    private const int MinVanityCodeLength = 5;
+
+    public const int DefaultCodeLength = 7;
+    private const int MinCodeLength = 4;
+    private const int MaxCodeLength = 32;
+    private const int MaxAttempts = 10;
+
+    // Length of generated (non-vanity) codes, configurable with the "NonVanityCodeLength" setting.
+    public static int GetCodeLength()
+    {
+        var setting = Environment.GetEnvironmentVariable("NonVanityCodeLength");
+        return int.TryParse(setting, out var length)
+            ? Math.Clamp(length, MinCodeLength, MaxCodeLength)
+            : DefaultCodeLength;
+    }
 
     public static async Task<string> GetValidEndUrl(string vanity, IAzStrorageTablesService stgHelper)
     {
-        if (string.IsNullOrEmpty(vanity))
+        if (!string.IsNullOrEmpty(vanity))
+            return vanity;
+
+        var length = GetCodeLength();
+        for (var attempt = 0; attempt < MaxAttempts; attempt++)
         {
-            var newKey = await stgHelper.GetNextTableId();
-            string getCode() => Encode(newKey);
-            if (await stgHelper.IfShortUrlEntityExistByVanity(getCode()))
-                return await GetValidEndUrl(vanity, stgHelper);
-
-            return string.Join(string.Empty, getCode());
+            var code = GenerateRandomCode(length);
+            if (!await stgHelper.IfShortUrlEntityExistByVanity(code))
+                return code;
         }
-        else
-        {
-            return string.Join(string.Empty, vanity);
-        }
-    }
 
-    public static string Encode(int i)
-    {
-        if (i == 0)
-            return ConversionCode[0].ToString();
-
-        return GenerateUniqueRandomToken(i);
+        throw new InvalidOperationException("Unable to generate a unique short code.");
     }
 
     public static string GetShortUrl(string host, string vanity)
@@ -47,21 +49,14 @@ public static class Utility
         return host + "/" + vanity;
     }
 
-    // generates a unique, random, and alphanumeric token for the use as a url 
-    //(not entirely secure but not sequential so generally not guessable)
-    public static string GenerateUniqueRandomToken(int uniqueId)
+    // Purely random code (no sequential part), unbiased selection from the alphabet.
+    public static string GenerateRandomCode(int length)
     {
-        using (var generator = RandomNumberGenerator.Create())
+        return string.Create(length, 0, (span, _) =>
         {
-            //minimum size I would suggest is 5, longer the better but we want short URLs!
-            var bytes = new byte[MinVanityCodeLength];
-            generator.GetBytes(bytes);
-            var chars = bytes
-                .Select(b => ConversionCode[b % ConversionCode.Length]);
-            var token = new string(chars.ToArray());
-            var reversedToken = string.Join(string.Empty, token.Reverse());
-            return uniqueId + reversedToken;
-        }
+            for (var i = 0; i < span.Length; i++)
+                span[i] = ConversionCode[RandomNumberGenerator.GetInt32(ConversionCode.Length)];
+        });
     }
 
 
