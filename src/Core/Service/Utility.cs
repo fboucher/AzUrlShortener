@@ -80,7 +80,9 @@ public static class Utility
                 var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
                     HeaderValidated = null,
-                    MissingFieldFound = null
+                    MissingFieldFound = null,
+                    // Treat whitespace-only cells (e.g. an empty Clicks column) as empty so they default to 0
+                    TrimOptions = TrimOptions.Trim
                 };
 
                 using (var csv = new CsvReader(reader, csvConfig))
