@@ -2,6 +2,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Cloud5mins.ShortenerTools.TinyBlazorAdmin.Components;
 using Cloud5mins.ShortenerTools.TinyBlazorAdmin;
 using Microsoft.FluentUI.AspNetCore.Components.Components.Tooltip;
+using Cloud5mins.ShortenerTools.TinyBlazorAdmin.News;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,14 @@ builder.AddServiceDefaults();
 builder.Services.AddHttpClient<UrlManagerClient>(client => 
             {
                 client.BaseAddress = new Uri("https+http://api");
+            });
+
+// News section on the home page (see doc/news.md)
+builder.Services.Configure<NewsOptions>(builder.Configuration.GetSection(NewsOptions.SectionName));
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient<INewsService, NewsService>(client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(10);
             });
 
 // Add services to the container.
