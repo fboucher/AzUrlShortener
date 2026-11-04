@@ -1,0 +1,40 @@
+@using Cloud5mins.ShortenerTools.TinyBlazorAdmin.News
+@using Microsoft.Extensions.Options
+@attribute [StreamRendering]
+
+@inject INewsService NewsService
+@inject IOptionsMonitor<NewsOptions> NewsOptions
+
+@if (NewsOptions.CurrentValue.Enabled)
+{
+    @if (_loading)
+    {
+        <FluentProgressRing Width="24px" aria-label="Loading news" />
+    }
+    else if (!string.IsNullOrEmpty(_newsHtml))
+    {
+        <FluentCard Class="news-section" aria-label="News">
+            <FluentStack VerticalAlignment="Microsoft.FluentUI.AspNetCore.Components.VerticalAlignment.Center" HorizontalGap="8">
+                <FluentIcon Value="@(new Icons.Regular.Size24.News())" />
+                <h2 class="news-title">News</h2>
+            </FluentStack>
+            <div class="news-content">
+                @((MarkupString)_newsHtml)
+            </div>
+        </FluentCard>
+    }
+}
+
+@code {
+    private bool _loading = true;
+    private string? _newsHtml;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (NewsOptions.CurrentValue.Enabled)
+        {
+            _newsHtml = await NewsService.GetNewsHtmlAsync();
+        }
+        _loading = false;
+    }
+}

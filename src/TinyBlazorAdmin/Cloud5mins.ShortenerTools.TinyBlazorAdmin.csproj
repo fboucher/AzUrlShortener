@@ -11,6 +11,11 @@
 	<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" />
     <PackageReference Include="Blazor.Bootstrap" />
+    <PackageReference Include="Markdig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Cloud5mins.ShortenerTools.TinyBlazorAdmin.Tests" />
   </ItemGroup>
 
   <ItemGroup>
