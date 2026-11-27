@@ -186,3 +186,26 @@ code {
         border: none;
     }
 }
+
+/* News section (home page) */
+.news-section {
+    max-width: 900px;
+    margin: 1rem 0;
+    padding: 1rem 1.5rem;
+    height: auto !important;
+}
+
+    .news-section .news-title {
+        margin: 0;
+        font-size: var(--type-ramp-plus-2-font-size);
+    }
+
+    .news-section .news-content img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .news-section .news-content h2 {
+        font-size: var(--type-ramp-plus-1-font-size);
+        margin-top: 1rem;
+    }

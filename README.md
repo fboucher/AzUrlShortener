@@ -31,6 +31,8 @@ Features:
 
 If you want to **Update** or **Upgrade**, please refer to [the faq page](doc/faq.md). 
 
+The Tiny Blazor Admin home page shows a **News** section with announcements from this repository. It can be pointed to your own feed or disabled, see [how to manage the news](doc/how-to-manage-news.md).
+
 ## How To Use It
 
 Once deployed, use the admin webApp (aka TinyBlazorAdmin) to create new short URLs. 
