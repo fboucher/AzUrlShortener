@@ -5,12 +5,26 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <Version>4.2.0</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <AppVersion Condition="'$(AppVersion)' == ''">$(APP_VERSION)</AppVersion>
   </PropertyGroup>
+
+  <Target Name="SetApplicationInformationalVersion" BeforeTargets="GetAssemblyAttributes">
+    <PropertyGroup Condition="'$(AppVersion)' != ''">
+      <InformationalVersion>$(AppVersion)</InformationalVersion>
+    </PropertyGroup>
+  </Target>
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" />
     <PackageReference Include="Blazor.Bootstrap" />
+    <PackageReference Include="Markdig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Cloud5mins.ShortenerTools.TinyBlazorAdmin.Tests" />
   </ItemGroup>
 
   <ItemGroup>

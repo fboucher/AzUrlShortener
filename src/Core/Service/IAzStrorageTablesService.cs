@@ -17,4 +17,6 @@ public interface IAzStrorageTablesService
     Task SaveClickStatsEntity(ClickStatsEntity newStats);
     Task ImportUrlDataAsync(UrlDetails urlData);
     Task ImportClickStatsAsync(List<ClickStatsEntity> lstClickStats);
+    Task<SettingsEntity?> GetSettingsEntity();
+    Task SaveSettingsEntity(SettingsEntity settings);
 }

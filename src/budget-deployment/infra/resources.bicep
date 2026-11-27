@@ -13,6 +13,9 @@ param CustomDomain string
 @description('Default redirect URL passed to API and function services')
 param DefaultRedirectUrl string
 
+@description('Length of generated (non-vanity) short codes passed to the API service (4-32)')
+param NonVanityCodeLength string = '7'
+
 @description('Table service endpoint of the url-data storage account (for URL shortener data)')
 param urlDataTableEndpoint string
 
@@ -213,6 +216,10 @@ resource adminSite 'Microsoft.Web/sites@2023-12-01' = {
         {
           name: 'DefaultRedirectUrl'
           value: DefaultRedirectUrl
+        }
+        {
+          name: 'NonVanityCodeLength'
+          value: NonVanityCodeLength
         }
         // strTables connection used by AddAzureTableClient("strTables")
         {

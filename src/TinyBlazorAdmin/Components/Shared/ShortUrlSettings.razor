@@ -1,0 +1,60 @@
+@using Cloud5mins.ShortenerTools.Core.Messages
+@using CoreUtility = Cloud5mins.ShortenerTools.Utility
+@inject UrlManagerClient urlManager
+@inject IToastService toastService
+
+<h3>Short URLs</h3>
+
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
+    <FluentNumberField @bind-Value="codeLength"
+                       Label="Non Vanity Code Length"
+                       Min="@CoreUtility.MinCodeLength.ToString()"
+                       Max="@CoreUtility.MaxCodeLength.ToString()"
+                       Disabled="@(!loaded)"
+                       Style="width: 200px;" />
+    <FluentLabel>
+        Number of characters (@CoreUtility.MinCodeLength to @CoreUtility.MaxCodeLength) in the short code generated when no vanity is provided. Existing short URLs don't change.
+    </FluentLabel>
+    <FluentButton Appearance="Appearance.Accent"
+                  Loading="saving"
+                  Disabled="@(!loaded || saving)"
+                  OnClick="Save">
+        Save
+    </FluentButton>
+</FluentStack>
+
+@code
+{
+    int codeLength = CoreUtility.DefaultCodeLength;
+    bool loaded;
+    bool saving;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var settings = await urlManager.GetSettings();
+        if (settings is null)
+        {
+            toastService.ShowError("Unable to load the settings.");
+            return;
+        }
+
+        codeLength = settings.NonVanityCodeLength;
+        loaded = true;
+    }
+
+    private async Task Save()
+    {
+        saving = true;
+        var (success, message) = await urlManager.SettingsUpdate(new UrlSettings { NonVanityCodeLength = codeLength });
+        saving = false;
+
+        if (success)
+        {
+            toastService.ShowSuccess("Settings saved.");
+        }
+        else
+        {
+            toastService.ShowError(message);
+        }
+    }
+}

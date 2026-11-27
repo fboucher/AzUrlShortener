@@ -5,6 +5,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var customDomain = builder.AddParameter("CustomDomain");
 var defaultRedirectUrl = builder.AddParameter("DefaultRedirectUrl");
+var nonVanityCodeLength = builder.AddParameter("NonVanityCodeLength");
 
 // To use an existing storage account, you can provide the name and resource group of the existing storage account.
 // var existingStorageName = builder.AddParameter("existingStorageName");
@@ -32,11 +33,18 @@ var manAPI = builder.AddProject<Projects.Cloud5mins_ShortenerTools_Api>("api")
 						.WithReference(strTables)
 						.WaitFor(strTables)
 						.WithEnvironment("CustomDomain",customDomain)
-						.WithEnvironment("DefaultRedirectUrl",defaultRedirectUrl);
+						.WithEnvironment("DefaultRedirectUrl",defaultRedirectUrl)
+						.WithEnvironment("NonVanityCodeLength",nonVanityCodeLength);
 						//.WithExternalHttpEndpoints(); // If you want to access the API directly
 
-builder.AddProject<Projects.Cloud5mins_ShortenerTools_TinyBlazorAdmin>("admin")
+var admin = builder.AddProject<Projects.Cloud5mins_ShortenerTools_TinyBlazorAdmin>("admin")
 		.WithExternalHttpEndpoints()
 		.WithReference(manAPI);
+
+var appVersion = builder.Configuration["APP_VERSION"];
+if (!string.IsNullOrWhiteSpace(appVersion))
+{
+	admin.WithEnvironment("APP_VERSION", appVersion);
+}
 
 builder.Build().Run();
