@@ -1,8 +1,11 @@
+> 💬 Questions or ideas? Join us on [Discord](https://discord.gg/6zA3jKw) · 🐛 Found a bug or want a feature? [Open an issue on GitHub](https://github.com/fboucher/AzUrlShortener/issues)
 
-## Welcome to the News section
+---
 
-![Tiny Blazor Admin](assets/news-tinyblazoradmin.png)
+September, 2026
+- **Add Azure App Service deployment**: Offer alternative to the Azure Container Apps deployment for a even more budget friendly hosting solution.
+- **Moving back home**: After being under the [Microsoft account](https://github.com/microsoft/AzUrlShortener) the project is back under my [personal](https://github.com/fboucher/AzUrlShortener) acccount.
 
-This is where we will share announcements about **AzUrlShortener**: new releases, required upgrades (for example storage changes), and other important updates.
+---
 
-Want to know more? Have a look at the [documentation](https://github.com/fboucher/AzUrlShortener/blob/main/doc/faq.md) or the [releases](https://github.com/fboucher/AzUrlShortener/releases) on GitHub.
+❤️ Enjoying AzUrlShortener? [Sponsor on GitHub](https://github.com/sponsors/fboucher) or [buy me a coffee](https://buymeacoffee.com/fboucheros)
