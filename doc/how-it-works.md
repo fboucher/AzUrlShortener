@@ -3,7 +3,7 @@ How It Works
 
 The backend is using Azure Functions and Azure Table Storable this page will explains how they work together in this tool.
 
-![Global Diagram](../images/global_diagram_idea_v3b.jpg)
+![Global Diagram](assets/global_diagram_idea_v3b.jpg)
 
 ## Azure Functions
 

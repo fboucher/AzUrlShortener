@@ -2,7 +2,7 @@ Azure Storage Explorer is a free tool to manage your Azure cloud storage resourc
 
 Once installed, you need to configure it to access your Azure account. You can do this by clicking on the Open connection dialog the **DC plug** icon in the top left corner, then select the Azure Subscription option.
 
-![Azure Storage Explorer, Open connection dialog](../images/storageexplorer-selectresource.png)
+![Azure Storage Explorer, Open connection dialog](assets/storageexplorer-selectresource.png)
 
 And follow the steps to login to your Azure account.
 
@@ -10,7 +10,7 @@ And follow the steps to login to your Azure account.
 
 To find the table where the URLs data is saved, expend your subscription (with the key icon) in the tree view. Expand the Storage accounts, your account (probably starting by 'shortenertool' and ending with 'sa'), tables, and finally look for. `UrlsDetails`
 
-![Finding the UrlsDetails table in Azure Storage Explorer](../images/storageexplorer-tree.png)
+![Finding the UrlsDetails table in Azure Storage Explorer](assets/storageexplorer-tree.png)
 
 Pro tip: You can right-click on the table and select `Pin to Quick Access` to create a shortcut to it.
 
@@ -18,7 +18,7 @@ Pro tip: You can right-click on the table and select `Pin to Quick Access` to cr
 
 To create a new URL, make sure the `UrlsDetails` table is selected (directly or using the quick access), then click on the **+ Add** button in the top menu.
 
-![Creating a new URL in Azure Storage Explorer](../images/storageexplorer-addentry.png)
+![Creating a new URL in Azure Storage Explorer](assets/storageexplorer-addentry.png)
 
 The *Add Entity* dialog window will open, You will need to fill it in order to create the URL.
 
@@ -38,7 +38,7 @@ Once you are done, click on the **Insert** button. Congratulations, you have cre
 
 First, we need to search for the URL that we want to edit, and we do this by executing a query. 
 
-![Execute a query in Azure Storage Explorer](../images/storageexplorer-updateexisting.png)
+![Execute a query in Azure Storage Explorer](assets/storageexplorer-updateexisting.png)
 
 Click on the `Query` button in the top menu. Now depending on the information, you have changed the search parameters. 
 
