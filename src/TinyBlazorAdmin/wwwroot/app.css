@@ -57,6 +57,10 @@ footer {
         text-decoration: none;
     }
 
+    .footer-version {
+        white-space: nowrap;
+    }
+
         footer a:focus {
             outline: 1px dashed;
             outline-offset: 3px;
