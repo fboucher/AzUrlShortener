@@ -11,6 +11,9 @@
     "DefaultRedirectUrl": {
       "value": "${AZURE_DEFAULT_REDIRECT_URL}"
     },
+    "NonVanityCodeLength": {
+      "value": "${AZURE_NON_VANITY_CODE_LENGTH=7}"
+    },
     "environmentName": {
       "value": "${AZURE_ENV_NAME}"
     },

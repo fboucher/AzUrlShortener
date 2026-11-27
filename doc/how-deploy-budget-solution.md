@@ -50,6 +50,8 @@ You also need:
 	- **Custom domain**: The complete domain for your short URLs, such as `https://c5m.ca`.
 	- **Default redirect URL**: The destination used when a vanity URL does not exist or no vanity is supplied.
 
+	Generated (non-vanity) short codes are 7 characters long. To use another length (4 to 32), run `azd env set AZURE_NON_VANITY_CODE_LENGTH 10` before `azd up`. For an existing deployment, run `azd provision` after changing it. You can also change it in the admin tool under **Settings**; a value saved there takes priority.
+
 	`azd up` creates the resource group and required storage, App Service, Functions, and container registry resources. After provisioning, the post-provision hook builds the API image in Azure Container Registry and restarts the admin App Service so it can load the sidecar.
 
 1. Open the URLs printed by `azd` when deployment completes. The admin website URL is the App Service URL, and the redirect service URL is the Azure Functions URL.

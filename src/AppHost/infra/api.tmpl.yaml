@@ -36,6 +36,8 @@ properties:
             value: '{{ parameter "CustomDomain" }}'
           - name: DefaultRedirectUrl
             value: '{{ parameter "DefaultRedirectUrl" }}'
+          - name: NonVanityCodeLength
+            value: '{{ parameter "NonVanityCodeLength" }}'
           - name: HTTP_PORTS
             value: '{{ targetPortOrDefault 0 }}'
           - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY

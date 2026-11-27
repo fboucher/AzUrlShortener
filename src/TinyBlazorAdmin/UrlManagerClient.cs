@@ -98,6 +98,40 @@ public class UrlManagerClient(HttpClient httpClient)
 	}
 
 
+	public async Task<UrlSettings?> GetSettings()
+	{
+		try
+		{
+			return await httpClient.GetFromJsonAsync<UrlSettings>("/api/Settings");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.Message);
+		}
+
+		return null;
+	}
+
+	public async Task<(bool, string)> SettingsUpdate(UrlSettings settings)
+	{
+		try
+		{
+			using var response = await httpClient.PostAsJsonAsync("/api/SettingsUpdate", settings);
+			if (response.IsSuccessStatusCode)
+			{
+				return (true, "Success");
+			}
+
+			var errorDetails = await response.Content.ReadFromJsonAsync<DetailedBadRequest>();
+			return (false, errorDetails!.Message);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.Message);
+			return (false, ex.Message);
+		}
+	}
+
 	public async Task<bool> ImportUrlDataAsync(UrlDetails urlData)
 	{
 		try

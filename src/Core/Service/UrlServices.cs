@@ -197,6 +197,25 @@ public class UrlServices
 		return result;
 	}
 
+	public async Task<UrlSettings> GetSettings()
+	{
+		var settings = await _stgHelper.GetSettingsEntity();
+		return new UrlSettings { NonVanityCodeLength = Utility.GetCodeLength(settings?.NonVanityCodeLength) };
+	}
+
+	public async Task<UrlSettings> UpdateSettings(UrlSettings input)
+	{
+		if (input.NonVanityCodeLength < Utility.MinCodeLength || input.NonVanityCodeLength > Utility.MaxCodeLength)
+		{
+			throw new ShortenerToolException(HttpStatusCode.BadRequest,
+				$"The Non Vanity Code Length must be between {Utility.MinCodeLength} and {Utility.MaxCodeLength}.");
+		}
+
+		await _stgHelper.SaveSettingsEntity(new SettingsEntity { NonVanityCodeLength = input.NonVanityCodeLength });
+		_logger.LogInformation("Settings saved.");
+		return input;
+	}
+
 	public async Task<bool> ImportUrlDataAsync(UrlDetails urlData)
 	{
 		try

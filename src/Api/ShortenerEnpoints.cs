@@ -21,6 +21,10 @@ public static class ShortenerEnpoints
             .WithDescription("List all Urls")
             .WithDisplayName("Url List");
 
+        endpoints.MapGet("/Settings", GetSettings)
+            .WithDescription("Get the shortener settings")
+            .WithDisplayName("Get Settings");
+
 
         // POSTS
 
@@ -31,6 +35,10 @@ public static class ShortenerEnpoints
         endpoints.MapPost("/UrlUpdate", UrlUpdate)
             .WithDescription("Update a Url")
             .WithDisplayName("Url Update");
+
+        endpoints.MapPost("/SettingsUpdate", SettingsUpdate)
+            .WithDescription("Update the shortener settings")
+            .WithDisplayName("Settings Update");
 
         endpoints.MapPost("/UrlArchive", UrlArchive)
             .WithDescription("Archive a Url")
@@ -174,6 +182,48 @@ public static class ShortenerEnpoints
             var host = GetHost(context);
             ListResponse Urls = await urlServices.List(host);
             return TypedResults.Ok(Urls);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An unexpected error was encountered.");
+            return TypedResults.InternalServerError<DetailedBadRequest>(new DetailedBadRequest { Message = ex.Message });
+        }
+    }
+
+    static private async Task<Results<
+                                Ok<UrlSettings>,
+                                InternalServerError<DetailedBadRequest>>>
+                                GetSettings(TableServiceClient tblClient,
+                                            ILogger logger)
+    {
+        try
+        {
+            var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
+            return TypedResults.Ok(await urlServices.GetSettings());
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An unexpected error was encountered.");
+            return TypedResults.InternalServerError<DetailedBadRequest>(new DetailedBadRequest { Message = ex.Message });
+        }
+    }
+
+    static private async Task<Results<
+                                Ok<UrlSettings>,
+                                BadRequest<DetailedBadRequest>,
+                                InternalServerError<DetailedBadRequest>>>
+                                SettingsUpdate(UrlSettings settings,
+                                            TableServiceClient tblClient,
+                                            ILogger logger)
+    {
+        try
+        {
+            var urlServices = new UrlServices(logger, new AzStrorageTablesService(tblClient));
+            return TypedResults.Ok(await urlServices.UpdateSettings(settings));
+        }
+        catch (ShortenerToolException ex) when (ex.StatusCode == HttpStatusCode.BadRequest)
+        {
+            return TypedResults.BadRequest<DetailedBadRequest>(new DetailedBadRequest { Message = ex.Message });
         }
         catch (Exception ex)
         {
