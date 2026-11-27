@@ -33,6 +33,8 @@ If you want to **Update** or **Upgrade**, please refer to [the faq page](doc/faq
 
 The Tiny Blazor Admin home page shows a **News** section with announcements from this repository. It can be pointed to your own feed or disabled, see [how to manage the news](doc/how-to-manage-news.md).
 
+The admin footer displays the application version (`4.2.0`, set in the TinyBlazorAdmin project file). Set `APP_VERSION` at build time or runtime to use a container-specific version; the runtime value overrides the embedded version.
+
 ## How To Use It
 
 Once deployed, use the admin webApp (aka TinyBlazorAdmin) to create new short URLs. 

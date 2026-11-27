@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - v-next
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - main
