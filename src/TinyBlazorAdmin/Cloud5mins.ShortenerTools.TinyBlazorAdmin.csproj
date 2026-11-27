@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <Version>4.2.0</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <AppVersion Condition="'$(AppVersion)' == ''">$(APP_VERSION)</AppVersion>
   </PropertyGroup>
@@ -13,25 +14,6 @@
     <PropertyGroup Condition="'$(AppVersion)' != ''">
       <InformationalVersion>$(AppVersion)</InformationalVersion>
     </PropertyGroup>
-
-    <Exec
-      Condition="'$(AppVersion)' == ''"
-      Command="git describe --tags --dirty --always"
-      WorkingDirectory="$(MSBuildProjectDirectory)"
-      ConsoleToMSBuild="true"
-      IgnoreExitCode="true"
-      StandardOutputImportance="Low"
-      StandardErrorImportance="Low">
-      <Output TaskParameter="ConsoleOutput" PropertyName="_GitDescribeVersion" />
-    </Exec>
-
-    <PropertyGroup Condition="'$(AppVersion)' == '' and '$(_GitDescribeVersion)' != ''">
-      <InformationalVersion>$(_GitDescribeVersion)</InformationalVersion>
-    </PropertyGroup>
-
-    <Error
-      Condition="'$(AppVersion)' == '' and '$(_GitDescribeVersion)' == ''"
-      Text="Unable to determine the application version. Build from a Git checkout or set APP_VERSION." />
   </Target>
 
   <ItemGroup>

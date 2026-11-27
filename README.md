@@ -33,7 +33,7 @@ If you want to **Update** or **Upgrade**, please refer to [the faq page](doc/faq
 
 The Tiny Blazor Admin home page shows a **News** section with announcements from this repository. It can be pointed to your own feed or disabled, see [how to manage the news](doc/how-to-manage-news.md).
 
-The admin footer displays the version embedded in the application: the exact Git tag for clean release builds, or the nearest tag and commit identifier for other builds (just the commit identifier if no tag is available). Set `APP_VERSION` when building without Git metadata or when the container version should be displayed; a runtime `APP_VERSION` overrides the embedded version.
+The admin footer displays the application version (`4.2.0`, set in the TinyBlazorAdmin project file). Set `APP_VERSION` at build time or runtime to use a container-specific version; the runtime value overrides the embedded version.
 
 ## How To Use It
 
