@@ -15,17 +15,18 @@ public static class Utility
     private const string ConversionCode = "FjTG0s5dgWkbLf_8etOZqMzNhmp7u6lUJoXIDiQB9-wRxCKyrPcv4En3Y21aASHV";
 
     public const int DefaultCodeLength = 7;
-    private const int MinCodeLength = 4;
-    private const int MaxCodeLength = 32;
+    public const int MinCodeLength = 4;
+    public const int MaxCodeLength = 32;
     private const int MaxAttempts = 10;
 
-    // Length of generated (non-vanity) codes, configurable with the "NonVanityCodeLength" setting.
-    public static int GetCodeLength()
+    // Length of generated (non-vanity) codes. The value saved from the admin tool wins over
+    // the "NonVanityCodeLength" app setting, which wins over the default.
+    public static int GetCodeLength(int? savedLength = null)
     {
-        var setting = Environment.GetEnvironmentVariable("NonVanityCodeLength");
-        return int.TryParse(setting, out var length)
-            ? Math.Clamp(length, MinCodeLength, MaxCodeLength)
-            : DefaultCodeLength;
+        if (savedLength is null && int.TryParse(Environment.GetEnvironmentVariable("NonVanityCodeLength"), out var configured))
+            savedLength = configured;
+
+        return Math.Clamp(savedLength ?? DefaultCodeLength, MinCodeLength, MaxCodeLength);
     }
 
     public static async Task<string> GetValidEndUrl(string vanity, IAzStrorageTablesService stgHelper)
@@ -33,7 +34,8 @@ public static class Utility
         if (!string.IsNullOrEmpty(vanity))
             return vanity;
 
-        var length = GetCodeLength();
+        var settings = await stgHelper.GetSettingsEntity();
+        var length = GetCodeLength(settings?.NonVanityCodeLength);
         for (var attempt = 0; attempt < MaxAttempts; attempt++)
         {
             var code = GenerateRandomCode(length);

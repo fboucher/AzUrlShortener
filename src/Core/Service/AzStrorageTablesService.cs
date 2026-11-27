@@ -24,6 +24,24 @@ public class AzStrorageTablesService(TableServiceClient client) : IAzStrorageTab
         return table;
     }
 
+    private TableClient GetSettingsTable()
+    {
+        client.CreateTableIfNotExists("Settings");
+        TableClient table = client.GetTableClient("Settings");
+        return table;
+    }
+
+    public async Task<SettingsEntity?> GetSettingsEntity()
+    {
+        var result = await GetSettingsTable().GetEntityIfExistsAsync<SettingsEntity>(SettingsEntity.Partition, SettingsEntity.Row);
+        return result.HasValue ? result.Value : null;
+    }
+
+    public async Task SaveSettingsEntity(SettingsEntity settings)
+    {
+        await GetSettingsTable().UpsertEntityAsync(settings);
+    }
+
     public async Task<int> GetNextTableId()
     {
         //Get current ID

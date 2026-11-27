@@ -55,9 +55,10 @@ After a few seconds, you should now be in your version of the AzUrlShortener pro
 	azd up
 	```
 
-	You will be asked where to deploy Azure Subscription and location select what make sense for you. You will be asked two more information:
+	You will be asked where to deploy Azure Subscription and location select what make sense for you. You will be asked for the following information:
 	- **The Custom domain**: This should be the complete (including the https part) domain name for your short URLs ex: https://c5m.ca.
 	- **Default Redirect Url**: This is the URL used if the vanity doesn't exist, or if no vanity is used. It must include the https part.
+	- **Non Vanity Code Length**: The number of characters in the short code generated when no vanity is provided. Use a number from 4 to 32; `7` is the default. You can change it later in the admin tool under **Settings**.
 
 1. Get the application URL
 

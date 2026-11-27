@@ -14,6 +14,7 @@ param principalId string = ''
 
 param CustomDomain string
 param DefaultRedirectUrl string
+param NonVanityCodeLength string = '7'
 
 var tags = {
   'azd-env-name': environmentName
@@ -34,6 +35,7 @@ module resources './resources.bicep' = {
     principalId: principalId
     CustomDomain: CustomDomain
     DefaultRedirectUrl: DefaultRedirectUrl
+    NonVanityCodeLength: NonVanityCodeLength
     urlDataTableEndpoint: url_data.outputs.tableEndpoint
     funcStorageBlobEndpoint: funcstoragea17ca.outputs.blobEndpoint
     funcStorageQueueEndpoint: funcstoragea17ca.outputs.queueEndpoint
